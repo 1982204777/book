@@ -12,6 +12,7 @@
     <link href="/css/web/style.css?ver=20170401" rel="stylesheet"></head>
 <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+@yield('js')
 <body>
 <div id="wrapper">
     @include('admin.layout.nav')
@@ -22,5 +23,3 @@
 </div>
 </body>
 </html>
-<script type="text/javascript" src="/js/web/user/edit.js"></script>
-<script type="text/javascript" src="/js/web/user/reset_pwd.js"></script>

@@ -24,4 +24,7 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::post('/user/update', 'UserController@update');
     Route::get('/user/reset-password', 'UserController@viewResetPassword');
     Route::post('/user/reset-password', 'UserController@resetPassword');
+
+//    账户管理
+    Route::resource('/account', 'AccountController');
 });
