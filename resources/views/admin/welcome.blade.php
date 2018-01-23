@@ -3,7 +3,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>编程浪子微信图书商城</title>
-    <link href="/css/www/app.css" rel="stylesheet"></head>
+    <link href="/css/app.css" rel="stylesheet"></head>
 <body>
 <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
