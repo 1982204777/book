@@ -17,7 +17,7 @@ class AccountController extends BaseController
         $input = $request->input();
         $query = User::query();
         $status = array_get($input, 'status', -1);
-        $keywords = array_get($input, 'status', '');
+        $keywords = array_get($input, 'keywords', '');
         $current_page = intval(array_get($input, 'p', 1));
         if ($status > -1) {
             $query->where('status', $status);
@@ -34,7 +34,7 @@ class AccountController extends BaseController
             ->limit($page['page_size'])
             ->get();
         $status_mapping = config('common.status_mapping');
-        $page['page_count'] = $page['total_count'] / $page['page_size'] + 1;
+        $page['page_count'] = ceil($page['total_count'] / $page['page_size']);
         $page['current_page'] = $current_page;
 
         return view('admin/account/index', compact('accounts', 'status_mapping', 'page', 'status'));

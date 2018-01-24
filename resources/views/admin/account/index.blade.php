@@ -85,7 +85,7 @@
                 <div class="col-lg-12">
                     <span class="pagination_count" style="line-height: 40px;">共{{$page['total_count']}}条记录 | 每页{{$page['page_size']}}条</span>
                     <ul class="pagination pagination-lg pull-right" style="margin: 0 0 ;">
-                    @for($p = 1;$p <= $page['total_count']; $p++)
+                    @for($p = 1;$p <= $page['page_count']; $p++)
                         @if($p == $page['current_page'])
                                 <li class="active"><a href="/admin/account?p={{$p}}">{{$p}}</a></li>
                             @else
