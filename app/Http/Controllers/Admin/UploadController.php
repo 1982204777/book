@@ -23,7 +23,7 @@ class UploadController extends BaseController
             return "<script>{$callback}.error('请选择文件后再进行上传~~~')</script>";
         }
         if ($_FILES['pic']['error'] == 1) {
-            return "<script>{$callback}.error('图片过大，请选择低于2mb的图片~~~')</script>";
+            return "<script>{$callback}.error('图片过大，请选择不超过2mb的图片~~~')</script>";
         }
         $file_name = $_FILES['pic']['name'];
         $tmp_file_extend = explode('.', $file_name);

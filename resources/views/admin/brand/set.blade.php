@@ -39,9 +39,8 @@
                             </div>
                             <div class="pic-each">
                             <img class="preview_img" src="{{$brand ? $brand->logo : ''}}">
-                                {{--<span class="fa fa-times-circle del del_image hidden"><i></i></span>--}}
                                 <div class="hidden image_key">
-                                    <span data=""></span>
+                                    <span data="{{$brand ? $brand->logo : ''}}"></span>
                                 </div>
                             </div>
                         </form>

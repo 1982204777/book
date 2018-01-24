@@ -14,7 +14,7 @@ class AppLogService
         $get_params = $get_params ? $get_params : [];
         $post_params = $get_params ? $post_params : [];
         $target_url = request()->getRequestUri();
-        $referer = $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : '';
+        $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
         $ua = request()->userAgent();
 
         $app_access_log = new AppAccessLog();

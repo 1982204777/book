@@ -102,7 +102,7 @@ var brand_set_ops = {
             var file = event.currentTarget.files[0];
             var file_size = file.size / 1024;
             if (file_size > 2048) {
-                common_ops.alert('上传的图片过大，请选择不大于2mb的图片~~~');
+                common_ops.alert('上传的图片过大，请选择不超过2mb的图片~~~');
                 return ;
             }
             var url = window.URL.createObjectURL(file);
