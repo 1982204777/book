@@ -12,17 +12,17 @@ var user_edit_ops = {
         $('.save').click(function() {
             var btn_target = $(this);
             if (btn_target.hasClass('disabled')) {
-                alert('正在处理，请不要重复点击~~~');
+                common_ops.alert('正在处理，请不要重复点击~~~');
                 return false;
             }
            var nickname = $('.user_edit_wrap input[name=nickname]').val();
            var email = $('.user_edit_wrap input[name=email]').val();
            if (nickname.length < 1) {
-               alert('请输入合法的姓名~~~');
+               common_ops.tip('请输入合法的姓名~~~', $('.user_edit_wrap input[name=nickname]'));
                return false;
            }
            if (email.length < 1) {
-               alert('请输入合法的邮箱地址~~~')
+               common_ops.tip('请输入合法的邮箱地址~~~', $('.user_edit_wrap input[name=email]'))
                return false;
            }
            btn_target.addClass('disabled');
@@ -38,15 +38,20 @@ var user_edit_ops = {
                success:function(res) {
                    if (res.code == 0) {
                        btn_target.removeClass('disabled');
-                       alert(res.msg);
-                       window.location.href = window.location.href;
+                       callback = null;
+                       if (res.code === 0) {
+                           callback = function() {
+                               window.location.href = window.location.href;
+                           }
+                       }
+                       common_ops.alert(res.msg, callback);
                    }
                },
                error:function(res) {
                    if (typeof res === 'object' && res.status !== 500) {
-                       alert(res.responseJSON.message);
+                       common_ops.alert(res.responseJSON.message);
                    } else {
-                       alert('服务器错误~~~');
+                       common_ops.alert('服务器错误~~~');
                    }
                }
            });

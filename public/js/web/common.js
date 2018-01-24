@@ -113,7 +113,7 @@ var common_ops = {
         $("#side-menu li."+nav_name).addClass("active");
     },
     buildWebUrl:function( path ,params){
-        var url =   "/web" + path;
+        var url =   "/admin" + path;
         var _paramUrl = '';
         if( params ){
             _paramUrl = Object.keys(params).map(function(k) {

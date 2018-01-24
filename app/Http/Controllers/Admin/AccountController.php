@@ -105,4 +105,32 @@ class AccountController extends BaseController
     {
         //
     }
+
+    public function ops()
+    {
+        $uid = request('uid');
+        $act = request('act');
+        if (!$uid) {
+            return ajaxReturn('请选择要操作的账号~~~');
+        }
+        if (!in_array($act, ['remove', 'recover'])) {
+            return ajaxReturn('操作有误，请重试~~~');
+        }
+        $user = User::find($uid);
+        if (!$user) {
+            return ajaxReturn('您指定的账号不存在~~~');
+        }
+        switch ($act){
+            case "remove":
+                $user->status = 0;
+                $act = '删除成功~~~';
+                break;
+            case "recover":
+                $user->status = 1;
+                $act = '恢复成功~~~';
+        };
+        $user->save();
+
+        return ajaxReturn($act);
+    }
 }

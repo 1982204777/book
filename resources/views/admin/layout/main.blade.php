@@ -12,6 +12,8 @@
     <link href="/css/web/style.css?ver=20170401" rel="stylesheet"></head>
 <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/plugins/layer/layer.js"></script>
+<script src="/js/web/common.js"></script>
 @yield('js')
 <body>
 <div id="wrapper">

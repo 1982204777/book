@@ -27,4 +27,5 @@ Route::group(['middleware' => 'checkLogin'], function() {
 
 //    账户管理
     Route::resource('/account', 'AccountController');
+    Route::post('/account/ops', 'AccountController@ops');
 });

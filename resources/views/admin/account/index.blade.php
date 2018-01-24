@@ -72,10 +72,15 @@
                         <a class="m-l" href="/admin/account/{{$account->uid}}/edit">
                             <i class="fa fa-edit fa-lg"></i>
                         </a>
-
-                        <a class="m-l remove" href="javascript:void(0);" data="13">
+                        @if($account->status)
+                        <a class="m-l remove" href="javascript:void(0);" data="{{$account->uid}}">
                             <i class="fa fa-trash fa-lg"></i>
                         </a>
+                        @else
+                        <a class="m-l recover" href="javascript:void(0);" data="{{$account->uid}}">
+                            <i class="fa fa-rotate-left fa-lg"></i>
+                        </a>
+                        @endif
                     </td>
                 </tr>
                 @endforeach
