@@ -14,7 +14,7 @@ class CreateUserTable extends Migration
     public function up()
     {
         Schema::create('user', function (Blueprint $table) {
-            $table->bigInteger('uid')->default(null)->comment('管理员ID');
+            $table->bigIncrements('uid')->default(null)->comment('管理员ID');
             $table->string('nickname', 100)->comment('用户名');
             $table->string('mobile', 20)->comment('手机号');
             $table->string('email', 100)->comment('邮箱');

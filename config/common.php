@@ -9,5 +9,8 @@ return [
 
     'page' => [
         'page_size' => 20
-    ]
+    ],
+
+    'default_avatar' => 'default_avatar'
+
 ];

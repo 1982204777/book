@@ -1,6 +1,6 @@
 @extends('admin.layout.main')
 @section('js')
-    <script type="text/javascript" src="/js/web/account/add.js"></script>
+    <script type="text/javascript" src="/js/web/account/set.js"></script>
 @endsection
 @section('content')
     <div class="row  border-bottom">
@@ -56,7 +56,7 @@
                 <div class="form-group">
                     <div class="col-lg-4 col-lg-offset-2">
                         <input type="hidden" name="id" value="13">
-                        <button class="btn btn-w-m btn-outline btn-primary save">保存</button>
+                        <button class="btn btn-w-m btn-outline btn-primary save" data="create">保存</button>
                     </div>
                 </div>
             </div>

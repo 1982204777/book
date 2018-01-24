@@ -12,9 +12,6 @@ class User extends Model
 
     protected $primaryKey = 'uid';
 
-    protected $hidden = [
-        'login_pwd'
-    ];
 
     public function getSaltPassword($password)
     {
@@ -25,4 +22,21 @@ class User extends Model
     {
         return $this->getSaltPassword($password) == $this->login_pwd;
     }
+
+    public function setSalt($length = 16)
+    {
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+';
+        $salt = '';
+        for ($i = 0; $i < $length; $i++) {
+            $salt .= $chars[mt_rand(0, strlen($chars) - 1)];
+        }
+
+        $this->login_salt = $salt;
+    }
+
+    public function setPassWord($password)
+    {
+        $this->login_pwd = $this->getSaltPassword($password);
+    }
+
 }

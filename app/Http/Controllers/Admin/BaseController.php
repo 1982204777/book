@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\User;
+use App\Http\Services\AppLogService;
 use Illuminate\Support\Facades\Cookie;
 
 class BaseController extends Controller
@@ -16,6 +17,8 @@ class BaseController extends Controller
         \View::composer('admin.layout.navbar', function($view) use ($user){
             $view->with('user', $user);
         });
+
+        AppLogService::addAppAccessLog($this->getCurrentUser()->uid);
     }
 
     public function getCurrentUser()
