@@ -95,7 +95,6 @@ var account_add_ops = {
                     },
                     dataType:'json',
                     success:function(res) {
-                        console.log(res);
                         btn_target.removeClass('disabled');
                         var callback = null;
                         if (res.code === 0) {
@@ -106,7 +105,6 @@ var account_add_ops = {
                         common_ops.alert(res.msg, callback);
                     },
                     error:function(res) {
-                        console.log('err', res);
                         if (typeof res === 'object' && res.status !== 500) {
                             common_ops.alert(res.responseJSON.message);
                         } else {

@@ -1,7 +1,4 @@
 @extends('admin.layout.main')
-@section('js')
-    <script type="text/javascript" src="/js/web/account/set.js"></script>
-@endsection
 @section('content')
     <div class="row  border-bottom">
         <div class="col-lg-12">

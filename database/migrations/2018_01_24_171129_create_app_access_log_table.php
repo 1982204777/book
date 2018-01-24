@@ -13,7 +13,7 @@ class CreateAppAccessLogTable extends Migration
      */
     public function up()
     {
-        Schema::create('app_access_log', function (Blueprint $table) {
+        Schema::create('app_access_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('uid')->default(0)->comment('uid');
             $table->string('referer_url', 255)->default('')->comment('当前访问的refer');

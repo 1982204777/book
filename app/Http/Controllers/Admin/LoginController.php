@@ -29,9 +29,9 @@ class LoginController extends Controller
             return normalReturn('用户名或密码不能为空~~~', '/admin/login');
         }
 
-        $user = User::where('login_name', $login_name)->first();
+        $user = User::where('login_name', $login_name)->where('status', 1)->first();
         if (!$user) {
-            return normalReturn('该用户不存在', '/admin/login');
+            return normalReturn('用户名密码不匹配~~~', '/admin/login');
         }
 
         //密码加密算法 = md5(login_pwd + md5(login_salt))

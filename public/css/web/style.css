@@ -7479,7 +7479,7 @@ body.rtls.top-navigation .footer.fixed {
 }
 
 .upload_pic_wrap .pic-each img{
-  width: 100px;
+  /*width: 100px;*/
   height: 60px;
   margin: 0 10px 15px 0;
   float: left;

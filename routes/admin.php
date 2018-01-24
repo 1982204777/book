@@ -28,4 +28,13 @@ Route::group(['middleware' => 'checkLogin'], function() {
 //    账户管理
     Route::resource('/account', 'AccountController');
     Route::post('/account/ops', 'AccountController@ops');
+
+//    品牌管理
+    Route::get('/brand/set', 'BrandController@set');
+    Route::post('/brand/set', 'BrandController@doSet');
+    Route::get('/brand/info', 'BrandController@info');
+    Route::get('/brand/images', 'BrandController@images');
+
+//    图片上传
+    Route::post('/upload/pic', 'UploadController@uploadImage');
 });
