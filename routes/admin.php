@@ -34,6 +34,9 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::post('/brand/set', 'BrandController@doSet');
     Route::get('/brand/info', 'BrandController@info');
     Route::get('/brand/images', 'BrandController@images');
+    Route::post('/brand/image', 'BrandController@image');
+    Route::post('/brand/image-ops', 'BrandController@imageOps');
+
 
 //    图片上传
     Route::post('/upload/pic', 'UploadController@uploadImage');

@@ -9,8 +9,8 @@ class AppLogService
 {
     public static function addAppAccessLog($uid = 0)
     {
-        $get_params = request()->get('.');
-        $post_params = request()->post('.');
+        $get_params = $_GET;
+        $post_params = $_POST;
         $get_params = $get_params ? $get_params : [];
         $post_params = $get_params ? $post_params : [];
         $target_url = request()->getRequestUri();

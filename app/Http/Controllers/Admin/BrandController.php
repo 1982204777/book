@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Models\BrandImage;
 use App\Http\Models\BrandSetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -54,8 +55,51 @@ class BrandController extends BaseController
         return view('admin/brand/info', compact('brand'));
     }
 
-    public function images()
+    public function images(Request $request)
     {
-        return view('admin/brand/image');
+        $input = $request->input();
+        $current_page = intval(array_get($input, 'p', 1));
+        $page = config('common.page');
+        $query = BrandImage::query();
+        $page['total_count'] = $query->count();
+        $brand_images = $query->orderBy('created_at', 'desc')
+            ->offset(($current_page - 1) * $page['page_size'])
+            ->limit($page['page_size'])
+            ->get();
+        $page['page_count'] = ceil($page['total_count'] / $page['page_size']);
+        $page['current_page'] = $current_page;
+
+        return view('admin/brand/image', compact('brand_images', 'page'));
+    }
+
+    public function image(Request $request)
+    {
+        $image_key = $request->post('image_key');
+        if (!$image_key) {
+            return ajaxReturn('请选择需要上传的图片~~~');
+        }
+        $model = new BrandImage();
+        $model->fill([
+            'image_key' => $image_key,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+        $model->save();
+
+        return ajaxReturn('保存成功~~~');
+    }
+
+    public function imageOps(Request $request)
+    {
+        $id = $request->post('id');
+        if (!$id) {
+            return ajaxReturn('请选择要删除的图片~~~');
+        }
+        $brand_image = BrandImage::find($id);
+        if (!$brand_image) {
+            return ajaxReturn('要删除的图片不存在~~~');
+        }
+        $brand_image->delete();
+
+        return ajaxReturn('删除成功~~~');
     }
 }

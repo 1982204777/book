@@ -20,7 +20,7 @@
                 <dd>{{$brand ? $brand->name : ''}}</dd>
                 <dt>品牌Logo</dt>
                 <dd>
-                    <img class="img-circle circle-border" src="{{$brand ? $brand->logo : ''}}" style="width: 100px;height: 100px;"/>
+                    <img class="img-circle circle-border" src="{{$brand ? $brand->logo : ''}}" style="height: 100px;"/>
                 </dd>
 
                 <dt>联系电话</dt>

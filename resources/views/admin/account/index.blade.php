@@ -99,7 +99,6 @@
                     @endfor
                     </ul>
                 </div>
-{{--                {{$accounts->links()}}--}}
             </div>
         </div>
     </div>

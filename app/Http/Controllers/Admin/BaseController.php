@@ -18,7 +18,12 @@ class BaseController extends Controller
             $view->with('user', $user);
         });
 
-        AppLogService::addAppAccessLog($this->getCurrentUser()->uid);
+        $currentUser = $this->getCurrentUser();
+        if ($currentUser) {
+            AppLogService::addAppAccessLog($this->getCurrentUser()->uid);
+        }
+
+        return true;
     }
 
     public function getCurrentUser()
