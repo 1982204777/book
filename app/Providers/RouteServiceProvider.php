@@ -16,7 +16,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected $namespace = 'App\Http\Controllers';
     protected $adminNamespace = 'App\Http\Controllers\Admin';
-
+    protected $wechatNamespace = 'App\Http\Controllers\Wechat';
     /**
      * Define your route model bindings, pattern filters, etc.
      *
@@ -42,6 +42,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapAdminRoutes();
 
+        $this->mapWechatRoutes();
         //
     }
 
@@ -80,5 +81,13 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('web')
             ->namespace($this->adminNamespace)
             ->group(base_path('routes/admin.php'));
+    }
+
+    protected function mapWechatRoutes()
+    {
+        Route::prefix('m')
+            ->middleware('web')
+            ->namespace($this->wechatNamespace)
+            ->group(base_path('routes/wechat.php'));
     }
 }

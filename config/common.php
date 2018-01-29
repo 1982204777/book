@@ -8,7 +8,7 @@ return [
     ],
 
     'page' => [
-        'page_size' => 2
+        'page_size' => 20
     ],
 
     'default_avatar' => 'default_avatar'
