@@ -37,6 +37,10 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::post('/brand/image', 'BrandController@image');
     Route::post('/brand/image-ops', 'BrandController@imageOps');
 
+//    会员管理
+    Route::resource('/member', 'MemberController');
+    Route::post('/member/ops', 'MemberController@ops');
+
 
 //    图片上传
     Route::post('/upload/pic', 'UploadController@uploadImage');

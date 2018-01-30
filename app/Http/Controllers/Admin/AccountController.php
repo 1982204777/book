@@ -20,6 +20,9 @@ class AccountController extends BaseController
         $status = array_get($input, 'status', -1);
         $keywords = array_get($input, 'keywords', '');
         $current_page = intval(array_get($input, 'p', 1));
+        if ($current_page < 0) {
+            $current_page = 1;
+        }
         if ($status > -1) {
             $query->where('status', $status);
         }

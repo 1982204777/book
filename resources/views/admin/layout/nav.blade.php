@@ -21,19 +21,19 @@
                 <a href="/admin/brand/info"><i class="fa fa-cog fa-lg"></i> <span class="nav-label">品牌设置</span></a>
             </li>
             <li class="book">
-                <a href="/web/book/index"><i class="fa fa-book fa-lg"></i> <span class="nav-label">图书管理</span></a>
+                <a href="/admin/book/index"><i class="fa fa-book fa-lg"></i> <span class="nav-label">图书管理</span></a>
             </li>
             <li class="member">
-                <a href="/web/member/index"><i class="fa fa-group fa-lg"></i> <span class="nav-label">会员列表</span></a>
+                <a href="/admin/member"><i class="fa fa-group fa-lg"></i> <span class="nav-label">会员列表</span></a>
             </li>
             <li class="finance">
-                <a href="/web/finance/index"><i class="fa fa-rmb fa-lg"></i> <span class="nav-label">财务管理</span></a>
+                <a href="/admin/finance/index"><i class="fa fa-rmb fa-lg"></i> <span class="nav-label">财务管理</span></a>
             </li>
             <li class="market">
-                <a href="/web/qrcode/index"><i class="fa fa-share-alt fa-lg"></i> <span class="nav-label">营销渠道</span></a>
+                <a href="/admin/qrcode/index"><i class="fa fa-share-alt fa-lg"></i> <span class="nav-label">营销渠道</span></a>
             </li>
             <li class="stat">
-                <a href="/web/stat/index"><i class="fa fa-bar-chart fa-lg"></i> <span class="nav-label">统计管理</span></a>
+                <a href="/admin/stat/index"><i class="fa fa-bar-chart fa-lg"></i> <span class="nav-label">统计管理</span></a>
             </li>
         </ul>
 
