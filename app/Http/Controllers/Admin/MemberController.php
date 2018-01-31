@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Models\Member;
+use App\Http\Services\wechat\RequestService;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class MemberController extends BaseController
 {
     public function index(Request $request)
     {
+        $res = RequestService::getAccessToken();
+        dd($res);
         $input = $request->input();
         $status = array_get($input, 'status', -1);
         $keywords = array_get($input, 'keywords', '');

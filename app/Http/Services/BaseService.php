@@ -14,7 +14,10 @@ class BaseService
         self::$err_msg = $msg;
         self::$err_code = $code;
 
-        return false;
+        return [
+            'errcode' => $code,
+            'errmsg' => $msg
+        ];
     }
 
     public static function getLastErrorMsg()
