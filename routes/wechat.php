@@ -15,3 +15,5 @@
 Route::get('/', 'WelcomeController@index');
 Route::get('/home', 'WelcomeController@index');
 Route::get('/menu/set', 'MenuController@setMenu');
+Route::get('/oauth/login', 'OauthController@login');
+Route::get('/oauth/callback', 'OauthController@callback');
