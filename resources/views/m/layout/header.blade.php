@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <!-- Set render engine for 360 browser -->
     <meta name="renderer" content="webkit">
+    <meta name="csrf-token" content="{{csrf_token()}}">
     <title>微信图书商城</title>
     <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="/css/m/css_style.css" rel="stylesheet">

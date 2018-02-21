@@ -3,12 +3,7 @@
 namespace App\Http\Models;
 
 
-use Illuminate\Database\Eloquent\Model;
-
-class Member extends Model
+class Member extends BaseModel
 {
-
-    protected $guarded = [];
-
 
 }

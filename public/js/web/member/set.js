@@ -35,7 +35,6 @@ var member_set_ops = {
             var url = null;
             if (action === 'create') {
                 data = {
-                    _method:"PUT",
                     nickname:nickname,
                     mobile:mobile
                 };

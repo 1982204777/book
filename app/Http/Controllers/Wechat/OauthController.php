@@ -35,11 +35,12 @@ class OauthController
 
         $scope = isset($res['scope']) ? $res['scope'] : '';
         $openid = isset($res['openid']) ? $res['openid'] : '';
+        $cookie = cookie('openid', $openid, 0);
         if ($scope == 'snsapi_userinfo') {
             $url = "https://api.weixin.qq.com/sns/userinfo?access_token={$access_token}&openid={$openid}&lang=zh_CN";
             $request_res = HttpClient::get($url);
             $request_res = json_decode($request_res, true);
-            return $request_res;
+            return response($request_res)->cookie($cookie);
         }
 
         return $res;

@@ -18,6 +18,7 @@ Route::get('/menu/set', 'MenuController@setMenu');
 Route::get('/oauth/login', 'OauthController@login');
 Route::get('/oauth/callback', 'OauthController@callback');
 
-Route::get('/bind', 'BindController@bind');
+Route::get('/bind', 'BindController@index');
+Route::post('/bind', 'BindController@bind');
 Route::get('/bind/img-captcha', 'BindController@getCaptcha');
 Route::get('/bind/set-captcha', 'BindController@setImgCaptcha');

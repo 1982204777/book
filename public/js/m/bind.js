@@ -13,9 +13,17 @@ var wechat_bind_ops = {
     eventBind:function()
     {
         var that = this;
-        $('.login_form_wrap .get_captcha').click(function() {
-            var mobile_target = $('.login_form_wrap input[name=mobile]');
+        var mobile_target = $('.login_form_wrap input[name=mobile]');
+        var img_captcha_target = $('.login_form_wrap input[name=img_captcha]');
+        var mobile_captcha_target = $('.login_form_wrap input[name=captcha_code]');
+        $('.login_form_wrap .get_captcha').click(function(){
+            var btn_target = $(this);
             var mobile = mobile_target.val();
+            var img_captcha = img_captcha_target.val();
+            if (btn_target.hasClass('disabled')) {
+                common_ops.alert('正在处理，请不要重复点击~~~');
+                return false;
+            }
             if (mobile.length < 1) {
                 common_ops.alert('请输入手机号~~~');
                 return false;
@@ -24,12 +32,73 @@ var wechat_bind_ops = {
                 common_ops.alert('请输入符合规范的手机号~~~');
                 return false;
             }
-            var captcha_target = $('.login_form_wrap input[name=captcha_code]');
-            var captcha = captcha_target.val();
-            if (captcha.length < 1) {
+
+            if (img_captcha.length < 1) {
                 common_ops.alert('请输入验证码~~~');
                 return false;
             }
+            btn_target.addClass('disabled');
+            $.ajax({
+                url:'bind/img-captcha',
+                type:'GET',
+                data:{
+                    mobile:mobile,
+                    img_captcha:img_captcha
+                },
+                dataType:'json',
+                success:function(res)
+                {
+                    btn_target.removeClass('disabled');
+                    common_ops.alert(res.msg)
+                },
+                error:function()
+                {
+
+                }
+            });
+        });
+        $('.login_form_wrap .dologin').click(function() {
+            var btn_target = $(this);
+            var mobile = mobile_target.val();
+            var img_captcha = img_captcha_target.val();
+            var mobile_captcha = mobile_captcha_target.val();
+            if (btn_target.hasClass('disabled')) {
+                common_ops.alert('正在处理，请不要重复点击~~~');
+                return false;
+            }
+            if (mobile.length < 1) {
+                common_ops.alert('请输入手机号~~~');
+                return false;
+            }
+            if (!that.isPhoneAvailable(mobile_target)) {
+                common_ops.alert('请输入符合规范的手机号~~~');
+                return false;
+            }
+            if (img_captcha.length < 1) {
+                common_ops.alert('请输入验证码~~~');
+                return false;
+            }
+            if (mobile_captcha.length < 1) {
+                common_ops.alert('请输入手机验证码~~~');
+                return false;
+            }
+            btn_target.addClass('disabled');
+            $.ajax({
+                url:'bind',
+                type:'POST',
+                data:{
+                    mobile:mobile,
+                    img_captcha:img_captcha,
+                    mobile_captcha:mobile_captcha
+                },
+                dataType:'json',
+                success:function(res) {
+
+                },
+                error:function() {
+
+                }
+            });
         });
     },
     isPhoneAvailable:function(mobile_target) {
@@ -40,7 +109,7 @@ var wechat_bind_ops = {
             return true;
         }
     }
-    };
+};
 
 $(document).ready(function() {
     wechat_bind_ops.init();

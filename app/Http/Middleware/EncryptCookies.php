@@ -12,6 +12,7 @@ class EncryptCookies extends Middleware
      * @var array
      */
     protected $except = [
-        'book_user'
+        'book_user',
+        'img_captcha'
     ];
 }

@@ -48,11 +48,12 @@ class MemberController extends BaseController
     {
         $validateResult = $this->validateMiddle($request->input(), [
             'nickname' => 'required',
-            'mobile' => 'required|min:8',
+            'mobile' => 'required|min:11',
 
         ], [
             'nickname.required' => '请输入符合规范的会员名~~~',
             'mobile.required' => '请输入符合规范的会员手机号~~~',
+            'mobile.min' => '请输入十一位手机号~~~'
         ]);
         if ($validateResult) {
             return $validateResult;
@@ -62,6 +63,12 @@ class MemberController extends BaseController
         $mobile = $request->post('mobile');
         $model = new Member();
         $model->nickname = $nickname;
+        if (!$model::checkUnique($nickname, 'nickname')) {
+            return ajaxReturn('该会员名已经被注册了~~~', -1);
+        }
+        if (!$model::checkUnique($mobile, 'mobile')) {
+            return ajaxReturn('一个手机号只能注册一个会员~~~', -1);
+        }
         $model->mobile = $mobile;
         $model->avatar = '/images/common/' .config('common.default_avatar');
 
@@ -98,16 +105,16 @@ class MemberController extends BaseController
         $nickname = $request->input('nickname');
         $mobile = $request->input('mobile');
 
-        $query = Member::query();
-        if ($query->where('nickname', $nickname)->count() > 1) {
+        if (!Member::checkUnique($nickname, 'nickname', $member->nickname)) {
             return ajaxReturn('该会员名已经被注册了~~~', -1);
         }
-        if ($query->where('mobile', $mobile)->count() > 1) {
+        if (!Member::checkUnique($mobile, 'mobile', $member->mobile)) {
             return ajaxReturn('一个手机号只能注册一个会员~~~', -1);
         }
 
         $member->nickname = $nickname;
         $member->mobile = $mobile;
+        $member->save();
 
         return ajaxReturn('编辑成功~~~');
     }

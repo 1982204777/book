@@ -45,7 +45,7 @@ var brand_set_ops = {
             var description = description_target.val();
 
             if (name.length < 1) {
-                common_ops.alert('请输入符合规范的品牌名~~~');
+                common_ops.tip('请输入符合规范的品牌名~~~', name_target);
                 return ;
             }
             if (image_key.length < 1) {
@@ -53,15 +53,15 @@ var brand_set_ops = {
                 return ;
             }
             if (mobile.length < 1) {
-                common_ops.alert('请输入符合规范的联系电话~~~');
+                common_ops.tip('请输入符合规范的联系电话~~~', mobile_target);
                 return ;
             }
             if (address.length < 1) {
-                common_ops.alert('请输入符合规范的地址~~~');
+                common_ops.tip('请输入符合规范的地址~~~', address_target);
                 return ;
             }
             if (description.length < 1) {
-                common_ops.alert('请输入符合规范的品牌介绍~~~');
+                common_ops.tip('请输入符合规范的品牌介绍~~~', description_target);
                 return ;
             }
             btn_target.addClass('disabled');

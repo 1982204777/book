@@ -80,8 +80,8 @@ class AccountController extends BaseController
             return $validateResult;
         }
         $store_data = request(['nickname', 'mobile', 'email', 'login_name', 'login_pwd']);
-        $user = User::where('login_name', $store_data['login_name'])->first();
-        if ($user) {
+
+        if (!User::checkUnique($store_data['login_name'], 'login_name')) {
             return ajaxReturn('该登录名已存在，重新输入一个吧~~~', -1);
         }
 
@@ -156,7 +156,8 @@ class AccountController extends BaseController
         if (!$user) {
             return ajaxReturn('您指定的账号不存在', -1);
         }
-        if (count(User::where('login_name', $update_data['login_name'])->get()) > 1) {
+
+        if (!User::checkUnique($update_data['login_name'], 'login_name', $user->login_name)) {
             return ajaxReturn('该登录名已存在，重新输入一个吧~~~', -1);
         }
         $currentUser = $this->getCurrentUser();
