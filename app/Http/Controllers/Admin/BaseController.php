@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Models\User;
 use App\Http\Services\AppLogService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
 class BaseController extends Controller

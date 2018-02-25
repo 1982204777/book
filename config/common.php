@@ -11,6 +11,8 @@ return [
         'page_size' => 20
     ],
 
-    'default_avatar' => 'default_avatar.png'
+    'default_avatar' => '/images/common/default_avatar.png',
+
+    'wechat_login_salt' => 'dm3HsNYz3Uyddd46Rjg'
 
 ];

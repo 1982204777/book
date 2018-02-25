@@ -15,12 +15,12 @@ class MenuController extends Controller
                 [
                     'name' => '商城',
                     'type' => 'view',
-                    'url' => 'http://dev.book.com/m/home'
+                    'url' => 'http://1720t49i53.iok.la/m/home'
                 ],
                 [
                     'name' => '我',
                     'type' => 'view',
-                    'url' => 'http://dev.book.com/m/user'
+                    'url' => 'http://1720t49i53.iok.la/m/user'
                 ]
             ]
         ];

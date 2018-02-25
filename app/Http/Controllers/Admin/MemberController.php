@@ -36,6 +36,7 @@ class MemberController extends BaseController
         $page['page_count'] = ceil($page['total_count'] / $page['page_size']);
         $page['current_page'] = $current_page;
 
+
         return view('admin/member/index', compact('members', 'status_mapping', 'page', 'status'));
     }
 
@@ -70,7 +71,7 @@ class MemberController extends BaseController
             return ajaxReturn('一个手机号只能注册一个会员~~~', -1);
         }
         $model->mobile = $mobile;
-        $model->avatar = '/images/common/' .config('common.default_avatar');
+        $model->avatar = config('common.default_avatar');
 
         $model->save();
 

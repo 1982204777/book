@@ -11,14 +11,22 @@
 |
 */
 
-
-Route::get('/', 'WelcomeController@index');
-Route::get('/home', 'WelcomeController@index');
 Route::get('/menu/set', 'MenuController@setMenu');
 Route::get('/oauth/login', 'OauthController@login');
 Route::get('/oauth/callback', 'OauthController@callback');
+Route::get('/oauth/logout', 'OauthController@logout');
 
 Route::get('/bind', 'BindController@index');
 Route::post('/bind', 'BindController@bind');
 Route::get('/bind/img-captcha', 'BindController@getCaptcha');
 Route::get('/bind/set-captcha', 'BindController@setImgCaptcha');
+
+Route::group(['middleware' => 'checkWechatLogin'], function() {
+    Route::get('/', 'WelcomeController@index');
+    Route::get('/home', 'WelcomeController@index');
+
+    Route::get('/product', 'ProductController@index');
+
+    Route::get('/user', 'UserController@index');
+});
+Route::get('clear', 'WelcomeController@cookieClear');

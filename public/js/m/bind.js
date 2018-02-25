@@ -93,10 +93,26 @@ var wechat_bind_ops = {
                 },
                 dataType:'json',
                 success:function(res) {
-
+                    btn_target.removeClass('disabled');
+                    var callback = null;
+                    if (res.code === 2) {
+                        callback = function () {
+                            window.location.href = '/m/oauth/login?scope=snsapi_userinfo';
+                        }
+                    }
+                    if (res.code === 1) {
+                        callback = function () {
+                            window.location.href = '/m/home';
+                        }
+                    }
+                    common_ops.alert(res.msg, callback);
                 },
                 error:function() {
-
+                    if (typeof res === 'object' && res.status !== 500) {
+                        common_ops.alert(res.responseJSON.message);
+                    } else {
+                        common_ops.alert('服务器错误~~~');
+                    }
                 }
             });
         });

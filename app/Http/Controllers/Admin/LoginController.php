@@ -41,7 +41,8 @@ class LoginController extends Controller
             //加密字符串 + # + uid    加密字符串 = md5(login_name + login_pwd + login_salt)
             $auth_token = $user->uid . '#' .md5($login_name . $user->login_pwd . $user->login_salt);
             Cookie::queue($this->auth_cookie_name, $auth_token, 1440);
-            return redirect('admin/home')->withCookie($this->auth_cookie_name);
+
+            return redirect('admin/home');
         } else {
             return normalReturn('密码错误', '/admin/login');
         }

@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Http\Models\Member;
+use App\Http\Models\OauthMemberBind;
 use App\Http\Models\SmsCaptcha;
 use App\Http\Services\captcha\ValidateCode;
+use App\Http\Services\ConstantMapService;
 use App\Http\Services\UtilService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
-class BindController
+class BindController extends BaseController
 {
     private $img_captcha_cookie_name = 'img_captcha';
 
@@ -45,7 +47,7 @@ class BindController
         if (!$member) {
             if (Member::where('mobile', $mobile)->first()) {
                 //账号被禁止
-                return ajaxReturn('手机号码已注册，请直接使用手机号码登录~~~');
+                return ajaxReturn('您的账号已被禁止，请联系客服解决~~~', -1);
             }
 //            注册会员
             $member_model = new Member();
@@ -60,19 +62,38 @@ class BindController
             $member = $member_model;
         }
 
-        if (!$member || !$member->status) {
-            return ajaxReturn('您的账号已被禁止，请联系客服解决~~~');
+        $openid = $this->getCookie($this->auth_cookie_current_openid);
+
+        if ($openid) {
+            $bind_info = OauthMemberBind::where('member_id', $member->id)
+                    ->where('openid', $openid)
+                    ->where('type', ConstantMapService::$client_type_wechat)
+                    ->first();
+
+            if(!$bind_info){
+                $model_bind = new OauthMemberBind();
+                $model_bind->member_id = $member->id;
+                $model_bind->type = ConstantMapService::$client_type_wechat;
+                $model_bind->client_type = "weixin";
+                $model_bind->openid = $openid;
+                $model_bind->unionid = '';
+                $model_bind->extra = '';
+                $model_bind->save();
+                //绑定之后要做的事情
+//                QueueListService::addQueue( "bind",[
+//                    'member_id' => $member_info['id'],
+//                    'type' => 1,
+//                    'openid' => $model_bind->openid
+//                ] );
+            }
         }
 
-        $openid = Cookie::get('openid', '');
-        dd($openid);
-
-
-//        绑定完成后删除图片验证码cookie
-        Cookie::queue(Cookie::forget($this->img_captcha_cookie_name));
-
-
-
+        if (UtilService::isWechat() && $member->nickname == $member->mobile) {
+            return ajaxReturn('绑定成功~~~', 2);
+        }
+        //设置登录态
+        $this->setLoginStatus($member);
+        return ajaxReturn("绑定成功~~~", 1);
     }
 
     public function getCaptcha(Request $request)

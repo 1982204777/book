@@ -20,7 +20,6 @@ class CheckLogin
             }
         }
 
-//        dd($is_login);
         $request->attributes->add(['user' => $is_login]);
         return $next($request);
     }

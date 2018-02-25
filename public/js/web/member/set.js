@@ -18,14 +18,14 @@ var member_set_ops = {
             var nickname_target = $('.wrap_member_set input[name=nickname]');
             var nickname = nickname_target.val();
             if (nickname.length < 1) {
-                common_ops.alert('请输入符合规范的会员名~~~');
+                common_ops.tip('请输入符合规范的会员手机号~~~', nickname_target);
                 return false;
             }
 
             var mobile_target = $('.wrap_member_set input[name=mobile]');
             var mobile = mobile_target.val();
             if (mobile.length < 1) {
-                common_ops.alert('请输入符合规范的会员手机号~~~');
+                common_ops.tip('请输入符合规范的会员手机号~~~', mobile_target);
                 return false;
             }
 
