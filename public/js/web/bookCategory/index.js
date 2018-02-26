@@ -4,32 +4,33 @@ $.ajaxSetup({
         'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
     }
 });
-var account_index_ops = {
-    init:function() {
+var book_category_index_ops = {
+    init:function () {
         this.eventBind();
     },
-    eventBind:function() {
+    eventBind:function () {
         var that = this;
-        $('.search').click(function() {
-           $('.wrap_search').submit();
-        });
-
-        $('.remove').click(function() {
-            that.ops('remove', $(this).attr('data'));
-        });
-        $('.recover').click(function() {
+        $('.recover').click(function () {
             that.ops('recover', $(this).attr('data'));
         });
+        $('.remove').click(function () {
+            that.ops('remove', $(this).attr('data'));
+        });
+
+        $(".wrap_search select[name=status]").change( function(){
+            $(".wrap_search").submit();
+        });
+
     },
-    ops:function(act, uid) {
-        callback = {
-            "ok":function() {
+    ops:function (act, id) {
+        var callback = {
+            'ok':function () {
                 $.ajax({
-                    url:common_ops.buildWebUrl('/account/ops'),
+                    url:common_ops.buildWebUrl('/book/category/ops'),
                     type:'POST',
                     data:{
                         act:act,
-                        uid:uid
+                        id:id
                     },
                     dataType:'json',
                     success:function(res)
@@ -60,6 +61,6 @@ var account_index_ops = {
     }
 };
 
-$(document).ready(function() {
-   account_index_ops.init();
+$(document).ready(function () {
+    book_category_index_ops.init();
 });

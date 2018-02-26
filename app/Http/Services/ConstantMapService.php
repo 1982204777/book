@@ -9,6 +9,8 @@ class ConstantMapService {
 
     public static $default_avatar = 'default_avatar';
 
+    public static $default_status = -1;
+
     public static $status_mapping = [
         1 => '正常',
         0 => '已删除'

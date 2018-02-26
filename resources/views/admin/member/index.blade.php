@@ -87,10 +87,10 @@
                         <a  href="/admin/member/{{$member->id}}">
                             <i class="fa fa-eye fa-lg"></i>
                         </a>
+                        @if($member->status == 1)
                         <a class="m-l" href="/admin/member/{{$member->id}}/edit">
                             <i class="fa fa-edit fa-lg"></i>
                         </a>
-                        @if($member->status == 1)
                         <a class="m-l remove" href="javascript:void(0);" data="{{$member->id}}">
                             <i class="fa fa-trash fa-lg"></i>
                         </a>

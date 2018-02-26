@@ -69,10 +69,10 @@
                         <a  href="/admin/account/{{$account->uid}}">
                             <i class="fa fa-eye fa-lg"></i>
                         </a>
+                        @if($account->status)
                         <a class="m-l" href="/admin/account/{{$account->uid}}/edit">
                             <i class="fa fa-edit fa-lg"></i>
                         </a>
-                        @if($account->status)
                         <a class="m-l remove" href="javascript:void(0);" data="{{$account->uid}}">
                             <i class="fa fa-trash fa-lg"></i>
                         </a>
