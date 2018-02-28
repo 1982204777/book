@@ -28,8 +28,8 @@
 				<div class="form-group">
 					<select name="status" class="form-control inline">
 						<option value="-1">请选择状态</option>
-						@foreach($status_mapping as $key => $status)
-							<option value="{{$key}}" {{request()->get('status') == $key ? 'selected' : ''}}>{{$status}}</option>
+						@foreach($status_mapping as $key => $status_item)
+							<option value="{{$key}}" {{$status == $key ? 'selected' : ''}}>{{$status_item}}</option>
 						@endforeach
 					</select>
 				</div>

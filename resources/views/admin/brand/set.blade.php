@@ -38,11 +38,12 @@
                                 <input class="preview_input" type="file" name="pic" accept="image/png, image/jpeg, image/jpg,image/gif">
                             </div>
                             <div class="pic-each">
-                            <img class="preview_img" src="{{$brand ? $brand->logo : ''}}">
+                            <img class="preview_img" src="{{$brand ? '/storage/' . $brand->logo : ''}}">
                                 <div class="hidden image_key">
                                     <span data="{{$brand ? $brand->logo : ''}}"></span>
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </div>

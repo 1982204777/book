@@ -37,11 +37,18 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::post('/brand/image', 'BrandController@image');
     Route::post('/brand/image-ops', 'BrandController@imageOps');
 
-//    图书管理
-
 //    图书分类
     Route::resource('/book/category', 'BookCategoryController');
     Route::post('/book/category/ops', 'BookCategoryController@ops');
+
+//    图书图片管理
+    Route::get('/book/images', 'BookController@images');
+
+//    图书管理
+    Route::resource('/book', 'BookController');
+    Route::post('/book/ops', 'BookController@ops');
+
+
 
 //    会员管理
     Route::resource('/member', 'MemberController');

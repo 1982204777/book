@@ -38,10 +38,10 @@
                 @foreach($brand_images as $image)
                 <tr>
                     <td>
-                        <img src="{{$image->image_key}}" style="height: 100px;"/>
+                        <img src="{{'/storage/' . $image->image_key}}" style="height: 100px;"/>
                     </td>
                     <td>
-                        <a target="_blank" href="{{$image->image_key}}">查看大图</a>
+                        <a target="_blank" href="{{'http://' . request()->getHost() . '/storage/' . $image->image_key}}">查看大图</a>
                     </td>
                     <td>
                         <a class="m-l remove" href="javascript:void(0);" data="{{$image->id}}">

@@ -33,8 +33,9 @@ class UploadController extends BaseController
 
         //上传图片业务
         $path = request()->file('pic')->storePublicly($bucket . '/' . date('Ymd'));
-        $file_path = asset('storage/' . $path);
 
-        return "<script>{$callback}.success('{$file_path}')</script>";
+//        $file_path = asset('storage/' . $path);
+
+        return "<script>{$callback}.success('{$path}')</script>";
     }
 }

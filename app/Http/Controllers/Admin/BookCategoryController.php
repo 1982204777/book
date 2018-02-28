@@ -20,7 +20,7 @@ class BookCategoryController extends BaseController
         $categories = $query->get();
         $status_mapping = ConstantMapService::$status_mapping;
 
-        return view('admin/bookCategory/index', compact('categories', 'status_mapping'));
+        return view('admin/bookCategory/index', compact('categories', 'status_mapping', 'status'));
     }
 
     public function create()
@@ -90,9 +90,18 @@ class BookCategoryController extends BaseController
         if (!in_array($act, ['recover', 'remove'])) {
             return ajaxReturn('操作有误，请重试~~~');
         }
-        $category = BookCategory::find($id);
-        if (!$category) {
+
+        $query = BookCategory::query();
+        $query->where('id', $id);
+
+        if ($query->count() < 1) {
             return ajaxReturn('您指定的分类不存在~~~');
+        }
+        $query->whereDoesntHave('books');
+        $category = $query->first();
+
+        if (!$category) {
+            return ajaxReturn('该分类下已有图书，不能删除~~~', -1);
         }
         switch ($act) {
             case 'recover':

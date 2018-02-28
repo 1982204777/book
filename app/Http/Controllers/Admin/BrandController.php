@@ -6,6 +6,7 @@ use App\Http\Models\BrandImage;
 use App\Http\Models\BrandSetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends BaseController
 {
@@ -41,6 +42,7 @@ class BrandController extends BaseController
             $brand_model = new BrandSetting();
         }
         $input = request(['name', 'mobile', 'address', 'description']);
+
         $input['logo'] = request('image_key');
         $brand_model->fill($input);
         $brand_model->save();
@@ -98,6 +100,8 @@ class BrandController extends BaseController
         if (!$brand_image) {
             return ajaxReturn('要删除的图片不存在~~~');
         }
+//dd($brand_image->image_key);
+        Storage::delete('/brand/20180227/pAwGWPNIxANhaSyGLSU6rME5uR1jl6rIcAi8H92c.jpeg');
         $brand_image->delete();
 
         return ajaxReturn('删除成功~~~');

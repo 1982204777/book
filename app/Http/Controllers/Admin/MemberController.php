@@ -14,11 +14,11 @@ class MemberController extends BaseController
         $status = array_get($input, 'status', -1);
         $keywords = array_get($input, 'keywords', '');
         $current_page = intval(array_get($input, 'p', 1));
-        if ($current_page < 0) {
+        if ($current_page <= 0) {
             $current_page = 1;
         }
         $query = Member::query();
-        if ($status && $status != -1) {
+        if ($status != -1) {
             $query->where('status', $status);
         }
         if ($keywords) {
@@ -35,7 +35,6 @@ class MemberController extends BaseController
         $status_mapping = config('common.status_mapping');
         $page['page_count'] = ceil($page['total_count'] / $page['page_size']);
         $page['current_page'] = $current_page;
-
 
         return view('admin/member/index', compact('members', 'status_mapping', 'page', 'status'));
     }
