@@ -112,6 +112,18 @@ var common_ops = {
 
         $("#side-menu li."+nav_name).addClass("active");
     },
+    buildMUrl:function( path ,params){
+        var url =   "/m" + path;
+        var _paramUrl = '';
+        if( params ){
+            _paramUrl = Object.keys(params).map(function(k) {
+                return [encodeURIComponent(k), encodeURIComponent(params[k])].join("=");
+            }).join('&');
+            _paramUrl = "?"+_paramUrl;
+        }
+        return url + _paramUrl
+
+    },
     buildWebUrl:function( path ,params){
         var url =   "/admin" + path;
         var _paramUrl = '';

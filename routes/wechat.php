@@ -11,7 +11,8 @@
 |
 */
 
-Route::get('/menu/set', 'MenuController@setMenu');
+Route::get('/menu/set', '\App\Http\Controllers\Wechat\wx\MenuController@setMenu');
+Route::get('/test', '\App\Http\Controllers\Wechat\wx\MsgController@index');
 Route::get('/oauth/login', 'OauthController@login');
 Route::get('/oauth/callback', 'OauthController@callback');
 Route::get('/oauth/logout', 'OauthController@logout');
@@ -26,6 +27,11 @@ Route::group(['middleware' => 'checkWechatLogin'], function() {
     Route::get('/home', 'WelcomeController@index');
 
     Route::get('/product', 'ProductController@index');
+    Route::get('/product/search', 'ProductController@search');
+    Route::get('/product/info', 'ProductController@show');
+    Route::post('/product/fav', 'ProductController@fav');
+    Route::post('/product/ops', 'ProductController@ops');
+    Route::post('/product/cart', 'ProductController@addToCart');
 
     Route::get('/user', 'UserController@index');
 });

@@ -31,7 +31,7 @@ class BookController extends BaseController
         }
         if ($keywords) {
             $query->where('name', 'like', '%' . $keywords . '%')
-                ->orWhere('tags', 'like', '%' . $keywords . '%');
+                ->oRwhere('tags', 'like', '%' . $keywords . '%');
         }
 
         $page = config('common.page');

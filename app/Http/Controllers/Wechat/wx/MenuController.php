@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Wechat;
+namespace App\Http\Controllers\Wechat\wx;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\wechat\RequestService;

@@ -16,7 +16,7 @@
         <div class="bd">
             <ul>
                 @foreach($brand_images as $image)
-                <li><img style="max-height: 250px;" src="{{$image->image_key}}" /></li>
+                <li><img style="max-height: 250px;" src="{{'/storage/' . $image->image_key}}" /></li>
                 @endforeach
             </ul>
         </div>
@@ -31,4 +31,10 @@
             <li><a href="javascript:void(0);" style="padding-left: 0.1rem;"><span>品牌介绍：{{$brand_info->description}}</span></a></li>
         </ul>
     </div></div>
+<div class="copyright clearfix">
+    @if(isset($user))
+        <p class="name">欢迎您，{{$user->nickname}}</p>
+    @endif
+    <p class="copyright">由<a href="/" target="_blank">王庆銮</a>提供技术支持</p>
+</div>
 @endsection

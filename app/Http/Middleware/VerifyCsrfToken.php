@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        'http://1720t49i53.iok.la/wx_sample.php',
     ];
 }

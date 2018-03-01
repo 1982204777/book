@@ -38,6 +38,7 @@ return array(
     'App\\Http\\Models\\BaseModel' => $baseDir . '/app/Http/Models/BaseModel.php',
     'App\\Http\\Models\\Book' => $baseDir . '/app/Http/Models/Book.php',
     'App\\Http\\Models\\BookCategory' => $baseDir . '/app/Http/Models/BookCategory.php',
+    'App\\Http\\Models\\BookImage' => $baseDir . '/app/Http/Models/BookImage.php',
     'App\\Http\\Models\\BookStockLog' => $baseDir . '/app/Http/Models/BookStockLog.php',
     'App\\Http\\Models\\BrandImage' => $baseDir . '/app/Http/Models/BrandImage.php',
     'App\\Http\\Models\\BrandSetting' => $baseDir . '/app/Http/Models/BrandSetting.php',

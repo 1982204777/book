@@ -16,15 +16,17 @@ class CheckWechatLogin
         '/m/home',
         '/m',
         '/m/product',
+        '/m/product/search',
+        '/m/product/info'
     ];
 
     public function handle(Request $request,\Closure $next)
     {
-
         $is_login = $this->checkLogin();
         if (!$is_login) {
-            if (request()->ajax()) {
-                return response('未登录，请先登录~~~');
+            if (request()->ajax() && !in_array($request->getPathInfo(), $this->allow_action)) {
+                return ajaxReturn('未登录，请先登录~~~', -302);
+//                return response('未登录，请先登录~~~');
             } else {
                 $res = $this->checkAndLogin();
                 if ($res === true) {
@@ -37,7 +39,7 @@ class CheckWechatLogin
 
         $request->attributes->add(['member' => $is_login]);
 
-        \View::composer('m.layout.footer', function($view) use ($is_login){
+        \View::composer('m.welcome', function($view) use ($is_login){
             $view->with('user', $is_login);
         });
         return $next($request);

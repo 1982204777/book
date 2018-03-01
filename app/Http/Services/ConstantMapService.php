@@ -11,6 +11,8 @@ class ConstantMapService {
 
     public static $default_status = -1;
 
+    public static $default_system_err = '系统繁忙，请稍后再试~~~';
+
     public static $status_mapping = [
         1 => '正常',
         0 => '已删除'

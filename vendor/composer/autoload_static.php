@@ -344,6 +344,7 @@ class ComposerStaticInit98d713586e79a4e75060c0efcc569eb5
         'App\\Http\\Models\\BaseModel' => __DIR__ . '/../..' . '/app/Http/Models/BaseModel.php',
         'App\\Http\\Models\\Book' => __DIR__ . '/../..' . '/app/Http/Models/Book.php',
         'App\\Http\\Models\\BookCategory' => __DIR__ . '/../..' . '/app/Http/Models/BookCategory.php',
+        'App\\Http\\Models\\BookImage' => __DIR__ . '/../..' . '/app/Http/Models/BookImage.php',
         'App\\Http\\Models\\BookStockLog' => __DIR__ . '/../..' . '/app/Http/Models/BookStockLog.php',
         'App\\Http\\Models\\BrandImage' => __DIR__ . '/../..' . '/app/Http/Models/BrandImage.php',
         'App\\Http\\Models\\BrandSetting' => __DIR__ . '/../..' . '/app/Http/Models/BrandSetting.php',
