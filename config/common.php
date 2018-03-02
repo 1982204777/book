@@ -13,6 +13,11 @@ return [
 
     'default_avatar' => '/images/common/default_avatar.png',
 
-    'wechat_login_salt' => 'dm3HsNYz3Uyddd46Rjg'
+    'wechat_login_salt' => 'dm3HsNYz3Uyddd46Rjg',
+
+    'share_info' => [
+        'title' => '微信图书商城',
+        'desc' => '一个牛逼的商城~~~'
+    ]
 
 ];

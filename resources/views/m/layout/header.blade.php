@@ -12,7 +12,9 @@
     <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="/css/m/css_style.css" rel="stylesheet">
     <link href="/css/m/app.css?ver=20170401" rel="stylesheet"></head>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/m/weixin.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/plugins/layer/layer.js"></script>
     <script src="/js/web/common.js"></script>

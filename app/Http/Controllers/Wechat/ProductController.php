@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Wechat;
 use App\Http\Models\Book;
 use App\Http\Models\MemberCart;
 use App\Http\Models\MemberFav;
+use App\Http\Models\WechatShareHistory;
 use App\Http\Services\ConstantMapService;
 use Illuminate\Http\Request;
 
@@ -227,5 +228,23 @@ class ProductController extends BaseController
         if ($cart_info) {
             return ajaxReturn('操作成功~~~');
         }
+    }
+
+    public function share()
+    {
+        $url = \request()->post('url', '');
+        if (!$url) {
+            return ajaxReturn(ConstantMapService::$default_system_err, -1);
+        }
+        $member = \request()->attributes->get('member');
+        $member_id = $member ? $member->id : 0;
+
+        $wechat_share_history = new WechatShareHistory();
+        $wechat_share_history->member_id = $member_id;
+        $wechat_share_history->share_url = $url;
+        $wechat_share_history->created_at = date('Y-m-d H:i:s');
+        $wechat_share_history->save();
+
+        return ajaxReturn('保存成功~~~');
     }
 }

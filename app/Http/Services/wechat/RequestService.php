@@ -19,7 +19,6 @@ class RequestService extends BaseService
 
     public static function getAccessToken()
     {
-        self::setApp();
         $now = date('Y-m-d H:i:s');
         $access_token_model = OauthAccessToken::where('expire_time', '>', $now)
             ->limit(1)

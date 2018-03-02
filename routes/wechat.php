@@ -17,6 +17,8 @@ Route::get('/oauth/login', 'OauthController@login');
 Route::get('/oauth/callback', 'OauthController@callback');
 Route::get('/oauth/logout', 'OauthController@logout');
 
+Route::get('/jssdk/sign', '\App\Http\Controllers\Wechat\wx\JssdkController@index');
+
 Route::get('/bind', 'BindController@index');
 Route::post('/bind', 'BindController@bind');
 Route::get('/bind/img-captcha', 'BindController@getCaptcha');
@@ -32,6 +34,7 @@ Route::group(['middleware' => 'checkWechatLogin'], function() {
     Route::post('/product/fav', 'ProductController@fav');
     Route::post('/product/ops', 'ProductController@ops');
     Route::post('/product/cart', 'ProductController@addToCart');
+    Route::post('/product/share', 'ProductController@share');
 
     Route::get('/user', 'UserController@index');
     Route::get('/user/cart', 'UserController@cart');
