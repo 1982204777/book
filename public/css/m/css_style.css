@@ -429,7 +429,7 @@ input[type='checkbox']:checked + label:after, input[type='checkbox']:checked + l
 
 
 /***/
-.fav_list{background:#fff;padding:0 1rem 0 1rem;}
+.fav_list{background:#fff;padding:0 1rem 80px 1rem;}
 .fav_list li{padding:1rem 0;border-bottom:1px solid #e6e6e6; position:relative; padding-left:130px; min-height:140px;}
 .fav_list li .pic{display:block;width:120px;height:120px; position:absolute; left:0; top:1rem;}
 .fav_list li .pic img{display:block;width:100%;}

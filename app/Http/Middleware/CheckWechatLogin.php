@@ -25,8 +25,10 @@ class CheckWechatLogin
         $is_login = $this->checkLogin();
         if (!$is_login) {
             if (request()->ajax() && !in_array($request->getPathInfo(), $this->allow_action)) {
-                return ajaxReturn('未登录，请先登录~~~', -302);
-//                return response('未登录，请先登录~~~');
+                return response([
+                    'msg' => '未登录，请先登录~~~',
+                    'code' => 400
+                ], 400);
             } else {
                 $res = $this->checkAndLogin();
                 if ($res === true) {

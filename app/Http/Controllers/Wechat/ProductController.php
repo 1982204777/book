@@ -106,15 +106,30 @@ class ProductController extends BaseController
         $act = $request->post('act');
         $member = $request->attributes->get('member');
         $book_id = $request->post('book_id');
-        if (!in_array($act, ['del', 'set']) || !$book_id) {
+        if (!in_array($act, ['del', 'set'])) {
             return ajaxReturn(ConstantMapService::$default_system_err, -1);
         }
 
 //        删除
         if ($act == 'del') {
+            $id = $request->post('id', '');
+            if (!$id) {
+                return ajaxReturn(ConstantMapService::$default_system_err, -1);
+            }
+            $fav = MemberFav::find($id);
+            if (!$fav) {
+                return ajaxReturn(ConstantMapService::$default_system_err, -1);
+            }
 
+            $fav->delete();
+
+            return ajaxReturn('操作成功~~~', MemberFav::where('member_id', $member->id)->count() ? 0 : 2);
         }
 
+        if (!$book_id) {
+            return ajaxReturn(ConstantMapService::$default_system_err, -1);
+
+        }
 //        收藏
         if (!Book::find($book_id)) {
             return ajaxReturn(ConstantMapService::$default_system_err, -1);
@@ -165,12 +180,26 @@ class ProductController extends BaseController
         $quantity = $request->post('quantity');
         $member_id = $request->attributes->get('member')->id;
 
-        if (!in_array($act, ['set', 'del']) || !$quantity || !$book_id) {
+        if (!in_array($act, ['set', 'del'])) {
             return ajaxReturn(ConstantMapService::$default_system_err, -1);
         }
 
         if ($act == 'del') {
+            $id = $request->post('id', '');
+            if (!$id) {
+                return ajaxReturn(ConstantMapService::$default_system_err, -1);
+            }
+            $cart = MemberCart::find($id);
+            if (!$cart) {
+                return ajaxReturn(ConstantMapService::$default_system_err, -1);
+            }
+            $cart->delete();
 
+            return ajaxReturn('操作成功~~~', MemberCart::where('member_id', $member_id)->count() ? 0 : 2);
+        }
+
+        if (!$quantity || !$book_id) {
+            return ajaxReturn(ConstantMapService::$default_system_err, -1);
         }
 
         if (!Book::find($book_id)) {
@@ -180,7 +209,11 @@ class ProductController extends BaseController
                 ->where('member_id', $member_id)
                 ->first();
         if ($cart_info) {
-            $cart_info->quantity += $quantity;
+            if ($request->post('update')) {
+                $cart_info->quantity = $quantity;
+            } else {
+                $cart_info->quantity += $quantity;
+            }
 //            todo 购物车库存判断
             $cart_info->save();
         } else {

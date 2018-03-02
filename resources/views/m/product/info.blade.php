@@ -43,7 +43,7 @@
 </div>
 <div class="pro_fixed clearfix">
     <a href="/m/home"><i class="sto_icon"></i><span>首页</span></a>
-            <a class="fav" href="javascript:void(0);" data="{{$book->id}}"><i class="keep_icon"></i>
+            <a class="{{isset($member_fav) ? 'has_faved' : 'fav'}}" href="javascript:void(0);" data="{{$book->id}}"><i class="keep_icon"></i>
                 <span>{{isset($member_fav) ? '已收藏' : '收藏'}}</span>
             </a>
         <input type="button" value="立即订购" class="order_now_btn" data="{{$book->id}}"/>

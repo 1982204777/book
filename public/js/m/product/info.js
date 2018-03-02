@@ -24,11 +24,13 @@ var product_info_ops = {
                 },
                 dataType:'json',
                 success:function( res ){
-                    if( res.code == -302 ){
-                        common_ops.notlogin( );
+                    common_ops.alert( res.msg );
+                },
+                error:function (res) {
+                    if( res.responseJSON.code === 400 ){
+                        common_ops.notlogin();
                         return;
                     }
-                    common_ops.alert( res.msg );
                 }
             });
         });
@@ -44,11 +46,13 @@ var product_info_ops = {
                 },
                 dataType:'json',
                 success:function( res ){
-                    if( res.code == -302 ){
+                    common_ops.alert( res.msg );
+                },
+                error:function (res) {
+                    if( res.responseJSON.code === 400 ){
                         common_ops.notlogin();
                         return;
                     }
-                    common_ops.alert( res.msg );
                 }
             });
         });
