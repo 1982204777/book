@@ -392,13 +392,14 @@ input[type='checkbox']:checked + label:after, input[type='checkbox']:checked + l
 .address_list li .addr_op{border-top:1px solid #e6e6e6; padding:1rem; margin-top:0.5rem;}
 .addr_op a{display:inline-block;float:right;color:#878787;position:relative; padding-left:2.2rem;}
 .addr_op .del{font-style:normal; float:right;color:#878787;position:relative; padding-left:2.2rem; margin-left:2rem;}
-.edit_icon{display:block;width:1.8rem; height:2rem; position:absolute; left:0; top:50%; margin-top:-1.2rem; background:url(../../images/m/bianji@3x.png) no-repeat left top;background-size:contain;}
-.del_icon{display:block;width:1.8rem; height:1.8rem; position:absolute; left:0; top:50%; margin-top:-1rem; background:url(../../images/m/shanchu@3x.png) no-repeat left top;background-size:contain;}
+.edit_icon{display:block;width:1.8rem; height:2rem; position:absolute; left:0; top:62%; margin-top:-1.2rem; background:url(../../images/m/bianji@3x.png) no-repeat left top;background-size:contain;}
+.del_icon{display:block;width:1.8rem; height:1.8rem; position:absolute; left:0; top:54%; margin-top:-1rem; background:url(../../images/m/shanchu@3x.png) no-repeat left top;background-size:contain;}
 .addr_op .default_set{color:#878787; font-size:1.6rem; position:relative; padding-left:2rem;}
 .addr_op .check_icon{width:16px; height:16px;background:#fff; border:1px solid #999; position:absolute; left:0; top:50%; margin-top:-8px;}
 .addr_op .default_set.aon{color:#f20c11;}
 .addr_op .default_set.aon .check_icon{background:url(../../images/m/gougougou@3x.png) no-repeat left center  #f20c11;background-size:contain;  border:1px solid #f20c11;}
-
+#set_default {background:url(../../images/m/gougougou@3x.png) no-repeat left center  #f20c11;background-size:contain;  border:1px solid #f20c11;}
+.set_default_text{color:#f20c11;}
 /***/
 .op_box{padding:2rem 2rem 2rem 2rem; text-align:center;}
 .red_btn{display:inline-block; background:#f20c11;border:0; color:#fff;font-size:1.8rem;padding:1rem 3rem; line-height:24px; border-radius:8px;-webkit-border-radius:8px;}

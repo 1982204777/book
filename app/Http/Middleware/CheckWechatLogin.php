@@ -48,10 +48,8 @@ class CheckWechatLogin
 
         $request->attributes->add(['member' => $is_login]);
 
-
-        \View::composer('m.welcome', function($view) use ($is_login, $share_info){
+        \View::composer('m.welcome', function($view) use ($is_login){
             $view->with('user', $is_login);
-            $view->with('share_info', json_encode($share_info));
         });
         return $next($request);
     }

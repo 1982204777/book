@@ -41,6 +41,10 @@ Route::group(['middleware' => 'checkWechatLogin'], function() {
     Route::get('/user/order', 'UserController@order');
     Route::get('/user/fav', 'UserController@fav');
     Route::get('/user/comment', 'UserController@comment');
-    Route::get('/user/address', 'UserController@address');
+
+    Route::resource('/user/address', 'AddressController');
+    Route::post('/user/address/getProvinceCityTree', 'AddressController@getProvinceCityTree');
+    Route::post('/user/address/ops', 'AddressController@ops');
+
 });
 Route::get('clear', 'WelcomeController@cookieClear');

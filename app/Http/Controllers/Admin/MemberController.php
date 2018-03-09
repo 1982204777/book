@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Models\Member;
-use App\Http\Services\wechat\RequestService;
 use Illuminate\Http\Request;
 
 class MemberController extends BaseController

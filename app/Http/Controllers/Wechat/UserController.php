@@ -49,4 +49,5 @@ class UserController extends BaseController
     {
         return view('m/user/comment');
     }
+
 }

@@ -19,6 +19,15 @@ class BaseController extends Controller
         Cookie::queue($this->auth_cookie_name, $member_info->id . '#' .$auth_token);
     }
 
+    protected function validateMiddle($input, $rules, $messages)
+    {
+        $validator = $this->getValidationFactory()->make($input, $rules, $messages);
+        if ($validator->fails()) {
+            return response(['message' => $validator->errors()->first()], 406);
+        }
+        return false;
+    }
+
     public function removeLoginStatus()
     {
         Cookie::queue(Cookie::forget($this->auth_cookie_name));
