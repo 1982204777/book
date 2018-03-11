@@ -35,6 +35,9 @@ Route::group(['middleware' => 'checkWechatLogin'], function() {
     Route::post('/product/ops', 'ProductController@ops');
     Route::post('/product/cart', 'ProductController@addToCart');
     Route::post('/product/share', 'ProductController@share');
+    Route::match(['get', 'post'],'/product/order', 'ProductController@order');
+    Route::post('/product/placeOrder', 'ProductController@placeOrder');
+    Route::get('/product/order/pay', 'ProductController@pay');
 
     Route::get('/user', 'UserController@index');
     Route::get('/user/cart', 'UserController@cart');

@@ -57,6 +57,32 @@ var product_info_ops = {
             });
         });
 
+        $(".order_now_btn").click( function(){
+            var book_id = $(this).attr("data");
+            var quantity = $(".quantity-form input[name=quantity]").val();
+            $.ajax({
+                url:common_ops.buildMUrl("/product/order"),
+                type:'POST',
+                data:{
+                    book_id:book_id,
+                    quantity:quantity
+                },
+                dataType:'json',
+                success:function( res ){
+                    if (res.code === 0) {
+                        window.location.href = common_ops.buildMUrl('/product/order?book_id=' + book_id + '&quantity=' + quantity);
+                    } else {
+                        common_ops.alert(res.msg)
+                    }
+                },
+                error:function (res) {
+                    if( res.responseJSON.code === 400 ){
+                        common_ops.notlogin();
+                        return;
+                    }
+                }
+            });
+        });
         //加减效果 start
         $(".quantity-form .icon_lower").click(function () {
             var num = parseInt($(this).next(".input_quantity").val());

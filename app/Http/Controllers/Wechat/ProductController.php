@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Http\Models\Book;
+use App\Http\Models\City;
+use App\Http\Models\MemberAddress;
 use App\Http\Models\MemberCart;
 use App\Http\Models\MemberFav;
+use App\Http\Models\order\PayOrder;
 use App\Http\Models\WechatShareHistory;
 use App\Http\Services\ConstantMapService;
+use App\Http\Services\pay\PayOrderService;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseController
@@ -199,7 +203,10 @@ class ProductController extends BaseController
             return ajaxReturn('操作成功~~~', MemberCart::where('member_id', $member_id)->count() ? 0 : 2);
         }
 
-        if (!$quantity || !$book_id) {
+        if (!$quantity) {
+            return ajaxReturn('至少购买一本吧亲~~~');
+        }
+        if (!$book_id) {
             return ajaxReturn(ConstantMapService::$default_system_err, -1);
         }
 
@@ -230,6 +237,7 @@ class ProductController extends BaseController
         }
     }
 
+//    分享
     public function share()
     {
         $url = \request()->post('url', '');
@@ -246,5 +254,127 @@ class ProductController extends BaseController
         $wechat_share_history->save();
 
         return ajaxReturn('保存成功~~~');
+    }
+
+    public function order(Request $request)
+    {
+        $book_id = $request->post('book_id', 0);
+        $quantity = $request->get('quantity', 0);
+        if ($request->isMethod('get')) {
+            $book = Book::find($book_id);
+            $member = $request->attributes->get('member');
+            $member_addresses = MemberAddress::where('member_id', $member->id)
+                ->where('status', 1)
+                ->get();
+            $product_list[] = [
+                'id' => $book_id,
+                'name' => $book->name,
+                'price' => $book->price,
+                'quantity' => $quantity,
+                'main_img' => $book->main_img,
+            ];
+
+            $area_ids = $member_addresses->pluck('area_id')->toArray();
+            $city_mapping = City::whereIn('id', $area_ids)
+                    ->select(['province', 'city', 'area', 'id'])
+                    ->get()
+                    ->keyBy('id')
+                    ->toArray();
+            
+            $address_list = [];
+            foreach ($member_addresses as $key => $address) {
+                $tmp_address = '';
+                $tmp_address_info = $city_mapping[$address['area_id']];
+                $tmp_address .= $tmp_address_info['province'] . $tmp_address_info['city'] . $tmp_address_info['area'] . $address->address;
+                $address_list[$key]['address'] = $tmp_address;
+                $address_list[$key]['name'] = $address->nickname;
+                $address_list[$key]['mobile'] = $address->mobile;
+                $address_list[$key]['id'] = $address->id;
+                $address_list[$key]['is_default'] = $address->is_default;
+            }
+            $total_price = sprintf('%.2f', $book->price * $quantity);
+            return view('m/product/order', compact('address_list', 'product_list', 'total_price'));
+        }
+
+        $book = Book::find($book_id);
+        if (!$book) {
+            return ajaxReturn('请选择要购买的图书~~~', -2);
+        }
+        if (!$quantity) {
+            return ajaxReturn('至少购买一本吧亲~~~', -1);
+        }
+
+        return ajaxReturn('success');
+    }
+
+    public function placeOrder(Request $request)
+    {
+        $product_items = $request->post('product_items', []);
+        $address_id = $request->post('address_id', 0);
+        if (!$product_items) {
+            return ajaxReturn('请选择商品之后再提交~~~', -1);
+        }
+        if (!$address_id) {
+            return ajaxReturn('请选择收货地址~~~', -1);
+        }
+        $member = $request->attributes->get('member');
+        $items = $book_quantity_mapping = [];
+        foreach ($product_items as $item) {
+            $tmp_book_info = explode('#', $item);
+            $book_quantity_mapping[$tmp_book_info[0]] = $tmp_book_info[1];
+        }
+        $book_ids = array_keys($book_quantity_mapping);
+        $book_mapping = Book::whereIn('id', $book_ids)
+                ->where('status', 1)
+                ->get()
+                ->keyBy('id');
+
+        if ($book_mapping->isEmpty()) {
+            return ajaxReturn('请选择商品之后再提交~~~', -1);
+        }
+        $target_type = 1;
+        foreach ($product_items as $item) {
+            $tmp_book_info = explode('#', $item);
+            $items[] = [
+                'name' => $book_mapping[$tmp_book_info[0]]['name'],
+                'price' => $book_mapping[$tmp_book_info[0]]['price'],
+                'quantity' => $tmp_book_info[1],
+                'target_type' => $target_type,
+                'target_id' => $tmp_book_info[0]
+            ];
+        }
+
+        $params = [
+            'pay_type' => 1,
+            'pay_source' => 2,
+            'target_type' => $target_type,
+            'note' => '购买书籍',
+            'status' => -8,
+            'express_address_id' => $address_id
+        ];
+
+        $res = PayOrderService::placePayOrder($member->id, $items, $params);
+        if (!$res) {
+            return ajaxReturn('提交失败，失败原因：' . PayOrderService::getLastErrorMsg(), PayOrderService::getLastErrorCode());
+        }
+
+        return ajaxReturn([
+            'url' => 'order/pay?pay_order_id=' . $res['id'],
+            'msg' => '下单成功，前去支付~~~'
+        ]);
+    }
+
+    public function pay(Request $request)
+    {
+        $pay_order_id = $request->get('pay_order_id', 0);
+        if (!$pay_order_id) {
+            return back();
+        }
+        $pay_order = PayOrder::find($pay_order_id);
+        if (!$pay_order) {
+            return "<script>alert('订单错误~~~');window.location.href = '/m/product';</script>";
+        }
+
+        return view('m/product/pay', compact('pay_order'));
     }
 }

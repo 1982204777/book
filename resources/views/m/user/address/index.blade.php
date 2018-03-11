@@ -14,7 +14,7 @@
 		<p>{{$address->address}}</p>
 		<div class="addr_op">
 			<em class="del" data="{{$address->id}}" style="z-index: 9999;"><i class="del_icon"></i>删除</em>
-			<a href="/m/user/address/{{$address->id}}/edit"><i class="edit_icon" style="z-index: 9999;"></i>编辑</a>
+			<a href="/m/user/address/{{$address->id}}/edit" class="address_edit" style="z-index: 9999;"><i class="edit_icon" ></i>编辑</a>
 			@if($address->is_default == 1)
 			<div class="default_set"><i class="check_icon" id="set_default" data="{{$address->id}}" data-default="{{$address->is_default}}"></i><span class="set_default_text">默认地址</span></div>
 			@else

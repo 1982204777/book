@@ -81,7 +81,7 @@ var address_set_ops = {
                     }
                     common_ops.alert(res.msg,callback);
                 },
-                error:function() {
+                error:function(res) {
                     if (typeof res === 'object' && res.status !== 500) {
                         common_ops.alert(res.responseJSON.message);
                     } else {
@@ -110,7 +110,7 @@ var address_set_ops = {
                         that.province_cascade();
                     }
                 },
-                error:function() {
+                error:function(res) {
                     if (typeof res === 'object' && res.status !== 500) {
                         common_ops.alert(res.responseJSON.message);
                     } else {

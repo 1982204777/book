@@ -24,3 +24,8 @@ function getSalt($length = 16)
 
     return $salt;
 }
+
+function makeImgUrl($img_key)
+{
+    return '/storage/' . $img_key;
+}

@@ -8,8 +8,6 @@ class AreaService extends BaseService
 {
     public static function getProvinceMapping()
     {
-        $res = City::where('area_id', 0)->get()->toArray();
-//        dd($res);
         $provinces = [];
         $province_list = City::where('city_id', 0)
             ->orderBy('id', 'asc')
