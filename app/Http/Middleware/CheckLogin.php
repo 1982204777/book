@@ -6,6 +6,7 @@ namespace App\Http\Middleware;
 use App\Http\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use Mockery\Exception;
 
 class CheckLogin
 {
@@ -16,7 +17,8 @@ class CheckLogin
             if (request()->ajax()) {
                 return response('未登录，请先登录~~~');
             } else {
-                return redirect('/admin/login');
+                Cookie::queue(Cookie::forget('book_user'));
+                return response("<script>window.location.href='login'</script>");
             }
         }
 
@@ -31,7 +33,13 @@ class CheckLogin
             return false;
         }
 
-        list($uid, $auth_token) = explode('#', $auth_cookie);
+        $id_token_info = explode('#', $auth_cookie);
+
+        if (count($id_token_info) < 2) {
+            return false;
+        }
+        $uid = $id_token_info[0];
+        $auth_token = $id_token_info[1];
 
         if (!$auth_token || !$uid) {
             return false;

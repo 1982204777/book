@@ -100,8 +100,7 @@ class BrandController extends BaseController
         if (!$brand_image) {
             return ajaxReturn('要删除的图片不存在~~~');
         }
-//dd($brand_image->image_key);
-        Storage::delete('/brand/20180227/pAwGWPNIxANhaSyGLSU6rME5uR1jl6rIcAi8H92c.jpeg');
+        Storage::delete($brand_image->image_key);
         $brand_image->delete();
 
         return ajaxReturn('删除成功~~~');

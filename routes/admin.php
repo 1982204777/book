@@ -48,12 +48,14 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::resource('/book', 'BookController');
     Route::post('/book/ops', 'BookController@ops');
 
-
-
 //    会员管理
     Route::resource('/member', 'MemberController');
     Route::post('/member/ops', 'MemberController@ops');
 
+//    营销渠道
+    Route::get('/qrcode/make', 'QrCodeController@makeQrCode');
+    Route::resource('/qrcode', 'QrCodeController');
+    Route::post('/qrcode/{id}/delete', 'QrCodeController@destroy');
 
 //    图片上传
     Route::post('/upload/pic', 'UploadController@uploadImage');

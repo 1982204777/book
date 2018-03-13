@@ -8,6 +8,7 @@ use App\Http\Models\OauthMemberBind;
 use App\Http\Models\SmsCaptcha;
 use App\Http\Services\captcha\ValidateCode;
 use App\Http\Services\ConstantMapService;
+use App\Http\Services\QueueListService;
 use App\Http\Services\UtilService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -80,11 +81,11 @@ class BindController extends BaseController
                 $model_bind->extra = '';
                 $model_bind->save();
                 //绑定之后要做的事情
-//                QueueListService::addQueue( "bind",[
-//                    'member_id' => $member_info['id'],
-//                    'type' => 1,
-//                    'openid' => $model_bind->openid
-//                ] );
+                QueueListService::addQueue( "bind", [
+                    'member_id' => $model_bind->member_id,
+                    'type' => 1,
+                    'openid' => $model_bind->openid
+                ] );
             }
         }
 

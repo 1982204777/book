@@ -2,18 +2,34 @@
 /**
   * wechat php test
   */
+require './Medoo.php';
+
 
 //define your token
 define("TOKEN", "wangyouquan");
+
 $wechatObj = new wechatCallbackapiTest();
 //$wechatObj->valid();
 $wechatObj->responseMsg();
 
 class wechatCallbackapiTest
 {
-	public function valid()
+    public $medoo = '';
+    public function __construct()
     {
+        $medoo = new Medoo\Medoo([
+            'database_type' => 'mysql',
+            'database_name' => 'book',
+            'server' => 'localhost',
+            'username' => 'root',
+            'password' => 'root',
+            'charset' => 'utf8'
+        ]);
+        $this->medoo = $medoo;
+    }
 
+    public function valid()
+    {
         $echoStr = $_GET["echostr"];
     //valid signature , option
         if($this->checkSignature()){
@@ -30,18 +46,11 @@ class wechatCallbackapiTest
 		if (!empty($xml_data)){
                 /* libxml_disable_entity_loader is to prevent XML eXternal Entity Injection,
                    the best way is to check the validity of xml by yourself */
-                libxml_disable_entity_loader(true);
-              	$xml_obj = simplexml_load_string($xml_data, 'SimpleXMLElement', LIBXML_NOCDATA);
-            	$from_username = $xml_obj->FromUserName;
-            	$to_username = $xml_obj->ToUserName;
-            	$msg_type = $xml_obj->MsgType;//信息类型
-
-            if($xml_obj->Content == "商城账号") {
-                $res = '用户名：admin，密码：123456';
-            } else {
-                $res = $this->defaultTip();
-            }
-                echo $this->textTpl($from_username, $to_username, $res);
+            libxml_disable_entity_loader(true);
+            $xml_obj = simplexml_load_string($xml_data, 'SimpleXMLElement', LIBXML_NOCDATA);
+            $from_username = $xml_obj->FromUserName;
+            $to_username = $xml_obj->ToUserName;
+            $msg_type = $xml_obj->MsgType;//信息类型
 
             $res = [
                 'type' => 'text',
@@ -53,22 +62,23 @@ class wechatCallbackapiTest
                         $res = [ 'type'=>'text','data'=> '用户名：admin，密码：123456' ];
                     } else {
                         $kw = trim($xml_obj->Content);
-                        $res = $this->search( $kw );
+                        $res = $this->search($kw);
                     }
                     break;
                 case "event":
-//                $res = $this->parseEvent( $xml_obj );
+                $res = $this->parseEvent( $xml_obj );
                     break;
                 default:
                     break;
             }
 
+
             switch($res['type']) {
                 case "rich":
-                    return $this->richTpl($from_username, $to_username, $res['data']);
+                    echo $this->richTpl($from_username, $to_username, $res['data']);
                     break;
                 default:
-                    return $this->textTpl($from_username, $to_username, $res['data']);
+                    echo $this->textTpl($from_username, $to_username, $res['data']);
             }
         } else {
         	echo "success";
@@ -114,13 +124,15 @@ EOT;
 
     private function search($kw)
     {
-        $query = \App\Http\Models\Book::query();
-        $res = $query->where('name', 'like', '%' . $kw . '%')
-            ->orWhere('tags', 'like', '%' . $kw . '%')
-            ->orderBy('id', 'desc')
-            ->limit(3)
-            ->get();
-        if ($res->isNotEmpty()) {
+        $medoo = $this->medoo;
+        $res = $medoo->select("books", "*", [
+            "OR" => [
+                "name[~]" => $kw,
+                "tags[~]" => $kw
+            ]
+        ]);
+
+        if ($res) {
             $data = $this->getRichXml($res);
             $type = 'rich';
         } else {
@@ -129,6 +141,60 @@ EOT;
         }
 
         return ['type' => $type, "data" => $data];
+    }
+
+    public function parseEvent( $dataObj ){
+        $resType = "text";
+        $resData = $this->defaultTip();
+        $event = $dataObj->Event;
+        $event_key = $dataObj->EventKey;
+        switch($event){
+            case "subscribe":
+                $resData = $this->subscribeTips();
+
+                if ($event_key) {
+                    $qrcode_key = str_replace('qrscene_', '', $event_key);
+                    $this->medoo->update('market_qrcode', [
+                        'total_scan_count[+]' => 1,
+                    ], [
+                        'id' => $qrcode_key
+                    ]);
+
+                    $this->medoo->insert('qrcode_scan_history', [
+                        'openid' => strval($dataObj->FromUserName),
+                        'qrcode_id' => $qrcode_key,
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
+                break;
+            case "CLICK"://自定义菜单点击类型是CLICK的，可以回复指定内容
+                $eventKey = trim($dataObj->EventKey);
+                switch($eventKey){
+                }
+                break;
+            default:
+                $qrcode_key = str_replace('qrscene_', '', $event_key);
+                $this->medoo->update('market_qrcode', [
+                    'total_scan_count[+]' => 1,
+                ], [
+                    'id' => $qrcode_key
+                ]);
+                $resData = $this->subscribeTips();;
+        }
+        return [ 'type'=>$resType,'data'=>$resData ];
+    }
+
+    /**
+     * 关注默认提示
+     */
+    private function subscribeTips(){
+        $resData = <<<EOT
+感谢您关注随缘的公众号
+输入关键字,可以搜索商品哦,
+[商城账号]获取商城账号
+EOT;
+
+        return $resData;
     }
 
     private function textTpl($from_username, $to_username, $content)
@@ -147,9 +213,8 @@ EOT;
     /*
      *富文本
      */
-    private function richTpl($from_username, $to_username, $content)
-    {
-        $rich_tpl = <<<EOT
+    private function richTpl( $from_username ,$to_username,$data){
+        $tpl = <<<EOT
 <xml>
 <ToUserName><![CDATA[%s]]></ToUserName>
 <FromUserName><![CDATA[%s]]></FromUserName>
@@ -158,28 +223,28 @@ EOT;
 %s
 </xml>
 EOT;
-        return sprintf($rich_tpl, $to_username, $from_username, time(), $content);
-
+        return sprintf($tpl, $from_username, $to_username, time(), $data);
     }
 
     private function getRichXml($list)
     {
         $article_count = count($list);
         $article_content = '';
+
         foreach ($list as $item) {
-            $tmp_description = mb_substr(strip_tags($item->summary), 0, 20, 'utf-8');
-            $tmp_pic_url = request()->getHttpHost() . '/storage/' . $item->main_img;
-            $tmp_url = request()->getHttpHost() . '/admin/book/' . $item->id;
+            $tmp_description = mb_substr(strip_tags($item['summary']), 0, 20, 'utf-8');
+            $tmp_pic_url = 'http://' . $_SERVER['HTTP_HOST'] . '/storage/' . $item['main_img'];
+            $tmp_url = 'http://' . $_SERVER['HTTP_HOST'] . '/m/product/info?id=' . $item['id'];
             $article_content .= "
-            <item>
-<Title><![CDATA[{$item->name}]]></Title>
+<item>
+<Title><![CDATA[{$item['name']}]]></Title>
 <Description><![CDATA[{$tmp_description}]]></Description>
 <PicUrl><![CDATA[{$tmp_pic_url}]]></PicUrl>
 <Url><![CDATA[{$tmp_url}]]></Url>
 </item>";
         }
-        $article_body = "
-        <ArticleCount>%s</ArticleCount>
+
+        $article_body = "<ArticleCount>%s</ArticleCount>
 <Articles>
 %s
 </Articles>";
@@ -188,4 +253,4 @@ EOT;
     }
 }
 
-?>
+

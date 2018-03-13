@@ -12,7 +12,7 @@
 */
 
 Route::get('/menu/set', '\App\Http\Controllers\Wechat\wx\MenuController@setMenu');
-Route::get('/test', '\App\Http\Controllers\Wechat\wx\MsgController@index');
+Route::any('/wx/valid', '\App\Http\Controllers\Wechat\wx\TestController@actionIndex');
 Route::get('/oauth/login', 'OauthController@login');
 Route::get('/oauth/callback', 'OauthController@callback');
 Route::get('/oauth/logout', 'OauthController@logout');

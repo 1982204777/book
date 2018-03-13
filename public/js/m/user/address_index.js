@@ -24,7 +24,7 @@ var user_address_index_ops = {
                 }
             });
         });
-        $('.addr_op .address_edit').click(function () {
+        $('.addr_op .check_icon').click(function () {
             var id = $(this).attr('data');
             var is_default = $(this).attr('data-default');
             if (is_default === 1) {
