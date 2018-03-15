@@ -13,6 +13,8 @@ use App\Http\Models\order\PayOrder;
 use App\Http\Models\WechatShareHistory;
 use App\Http\Services\ConstantMapService;
 use App\Http\Services\pay\PayOrderService;
+use App\Http\Services\trpay\PayApiService;
+use App\Http\Services\UtilService;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseController
@@ -426,7 +428,7 @@ class ProductController extends BaseController
         ]);
     }
 
-    public function pay(Request $request)
+    public function payView(Request $request)
     {
         $pay_order_id = $request->get('pay_order_id', 0);
         if (!$pay_order_id) {
@@ -438,5 +440,52 @@ class ProductController extends BaseController
         }
 
         return view('m/product/pay', compact('pay_order'));
+    }
+
+    public function pay(Request $request)
+    {
+        $pay_order_id = $request->post('pay_order_id', 0);
+        if (!$pay_order_id) {
+            return ajaxReturn(ConstantMapService::$default_system_err, -1);
+        }
+        if (!UtilService::getIP()) {
+            return ajaxReturn('仅支持微信支付，请将页面链接粘贴至微信打开', -1);
+        }
+        $member = $request->attributes->get('member');
+        $pay_order_info = PayOrder::where('member_id', $member->id)
+                ->where('id', $pay_order_id)
+                ->where('status', -8)
+                ->with(['items' => function($q) {
+                    return $q->with('book');
+                }])
+                ->first();
+        if(!$pay_order_info){
+            return ajaxReturn(ConstantMapService::$default_system_err,-1 );
+        }
+        $book_name_string = '';
+        foreach ($pay_order_info['items'] as $item) {
+            $book_name_string .= $item['book']['name'] . '*' . $item['quantity'];
+            if (count($pay_order_info) > 1) {
+                $book_name_string .= '，';
+            }
+        }
+        $trpay = new PayApiService();
+        $timestamp = time();
+        $trpay->setParameter('outTradeNo', $pay_order_info->order_sn);
+        $trpay->setParameter('payType', '2');
+        $trpay->setParameter('tradeName', $book_name_string);
+        $trpay->setParameter('amount', '2');
+        $trpay->setParameter('notifyUrl', 'www.wangyouquan.cc/m/test');
+        $trpay->setParameter('synNotifyUrl', 'www.wangyouquan.cc/m/test');
+        $trpay->setParameter('payuserid', $member->id);
+        $trpay->setParameter('appkey', env('TRPAY_APP_KEY'));
+        $trpay->setParameter('method', 'trpay.trade.create.wap');
+        $trpay->setParameter('timestamp', $timestamp);
+        $trpay->setParameter('version', '1.0');
+        $trpay->setParameter('ipAddress', UtilService::getIP());
+        $params = $trpay->getSignParams();
+        $res = post('http://pay.trsoft.xin/order/trpayGetWay', $params);
+
+        return ajaxReturn($res);
     }
 }

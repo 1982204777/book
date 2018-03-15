@@ -1,6 +1,6 @@
 @extends('m/layout.main')
 @section('js')
-	<script type="text/javascript" src="/js/m/product/order.js"></script>
+	<script type="text/javascript" src="/js/m/product/pay.js"></script>
 @endsection
 @section('content')
 <div style="min-height: 500px;">
@@ -16,9 +16,11 @@
 	</div>
 </div>
 <div class="op_box">
-	<input style="width: 100%;" type="button" value="微信支付" class="red_btn do_pay"  />
+	<input style="width: 100%;" type="button" value="微信支付" data="{{$pay_order->id}}" class="red_btn do_pay"  />
 </div>
+	<div class="hidden pay">
 
+	</div>
 <div class="hide_wrap hidden">
 	<input type="hidden" name="pay_order_id" value="{{$pay_order->id}}">
 </div></div>

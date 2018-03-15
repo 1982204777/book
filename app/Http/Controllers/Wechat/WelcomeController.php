@@ -23,4 +23,9 @@ class WelcomeController extends BaseController
         Cookie::queue(Cookie::forget('book_member'));
         Cookie::queue(Cookie::forget('book_m_openid'));
     }
+
+    public function pay()
+    {
+        return view('m/user/pay');
+    }
 }
