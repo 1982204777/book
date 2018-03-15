@@ -12,7 +12,6 @@
 */
 
 Route::get('/menu/set', '\App\Http\Controllers\Wechat\wx\MenuController@setMenu');
-Route::any('/wx/valid', '\App\Http\Controllers\Wechat\wx\TestController@actionIndex');
 Route::get('/oauth/login', 'OauthController@login');
 Route::get('/oauth/callback', 'OauthController@callback');
 Route::get('/oauth/logout', 'OauthController@logout');
@@ -36,6 +35,7 @@ Route::group(['middleware' => 'checkWechatLogin'], function() {
     Route::post('/product/cart', 'ProductController@addToCart');
     Route::post('/product/share', 'ProductController@share');
     Route::match(['get', 'post'],'/product/order', 'ProductController@order');
+    Route::match(['get', 'post'],'/product/cartOrder', 'ProductController@cartOrder');
     Route::post('/product/placeOrder', 'ProductController@placeOrder');
     Route::get('/product/order/pay', 'ProductController@pay');
 
@@ -44,6 +44,7 @@ Route::group(['middleware' => 'checkWechatLogin'], function() {
     Route::get('/user/order', 'UserController@order');
     Route::get('/user/fav', 'UserController@fav');
     Route::get('/user/comment', 'UserController@comment');
+    Route::post('/user/orderOps', 'UserController@orderOps');
 
     Route::resource('/user/address', 'AddressController');
     Route::post('/user/address/getProvinceCityTree', 'AddressController@getProvinceCityTree');

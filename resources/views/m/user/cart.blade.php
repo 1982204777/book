@@ -4,11 +4,14 @@
 @endsection
 @section('content')
 <div style="min-height: 500px;">
+	<div class="page_title clearfix">
+		<span>购物车</span>
+	</div>
 	<div class="order_pro_box">
     	<ul class="order_pro_list">
 			@if($carts->isNotEmpty())
 			@foreach($carts as $cart)
-			<li data-price="{{$cart->book->price}}">
+			<li data="{{$cart->id}}">
 			<a href="/m/product/info?id={{$cart->book->id}}" class="pic" >
                 <img src="{{'/storage/' . $cart->book->main_img}}" style="height: 100px;width: 100px;"/>
             </a>
@@ -30,7 +33,7 @@
         	</ul>
     </div>
 <div class="cart_fixed">
-	<a href="/m/product/order?sc=cart" class="billing_btn">结算</a>
+	<a class="billing_btn">结算</a>
 	<b>合计：<strong>¥</strong><font id="price">{{$total_price}}</font></b>
 </div></div>
 @endsection

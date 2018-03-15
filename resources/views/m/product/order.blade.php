@@ -50,8 +50,8 @@
 		<h2>总计：{{$total_price}}</h2>
 	</div>
 </div>
-<div class="op_box">
-    <input type="hidden" name="sc" value="product">
+<div class="op_box" style="padding-bottom: 80px;">
+    <input type="hidden" name="sc" value="cart">
 	<input style="width: 100%;" type="button" value="确定下单" class="red_btn do_order"  />
 </div>
 </div>

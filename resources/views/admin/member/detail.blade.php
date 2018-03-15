@@ -74,46 +74,22 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        @foreach($member->pay_orders as $order)
                                         <tr>
                                             <td>
-                                                20170312194531                                            </td>
-                                            <td>
-                                                2017-03-12 22:28                                                                                            </td>
-                                            <td>
-                                                135.00                                            </td>
-                                            <td>
-                                                已支付                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                20170312194530                                            </td>
-                                            <td>
-                                                2017-03-12 22:28                                                                                            </td>
-                                            <td>
-                                                135.00                                            </td>
-                                            <td>
-                                                已支付                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                20170312194429                                            </td>
-                                            <td>
+                                                {{$order->order_sn}}
                                             </td>
                                             <td>
-                                                90.00                                            </td>
+                                                {{$order->pay_time}}
+                                            </td>
                                             <td>
-                                                待支付                                            </td>
+                                                {{$order->pay_price}}
+                                            </td>
+                                            <td>
+                                                {{$pay_status_mapping[$order->status]}}
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                20170312152428                                            </td>
-                                            <td>
-                                                2017-03-12 15:51                                                                                            </td>
-                                            <td>
-                                                88.88                                            </td>
-                                            <td>
-                                                已支付                                            </td>
-                                        </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>

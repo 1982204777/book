@@ -21,7 +21,7 @@ class PayOrderService extends BaseService
                 $continue_count += 1;
                 continue;
             }
-            $total_price += $item['price'];
+            $total_price += $item['price'] * $item['quantity'];
         }
         if ($continue_count >= count($items)) {
             return self::err('商品items不存在~~~', -1);
@@ -78,7 +78,7 @@ class PayOrderService extends BaseService
                 $pay_order_item->pay_order_id = $pay_order->id;
                 $pay_order_item->member_id = $member_id;
                 $pay_order_item->quantity = $item['quantity'];
-                $pay_order_item->price = $item['price'];
+                $pay_order_item->price = $item['price'] * $item['quantity'];
                 $pay_order_item->target_type = $item['target_type'];
                 $pay_order_item->target_id = $item['target_id'];
                 $pay_order_item->status = isset($item['status']) ? $item['status'] : 1;

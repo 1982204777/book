@@ -54,6 +54,42 @@ var user_cart_ops = {
             $(this).parent().parent().remove();
             that.cal_price();
         });
+
+        //    结算
+        $('.cart_fixed .billing_btn').click(function () {
+            var data = [];
+            $(".order_pro_list li").each( function(){
+                var cart_id = $(this).attr("data");
+                data.push( cart_id);
+            });
+
+            if (data.length < 1) {
+                return ;
+            }
+
+            $.ajax({
+                url:common_ops.buildMUrl('/product/cartOrder'),
+                type:'POST',
+                data:{
+                    cart_ids:data,
+                },
+                dataType:'json',
+                success:function (res) {
+                    if (res.code === 0) {
+                        window.location.href = common_ops.buildMUrl('/product/cartOrder?cart_ids=' + data);
+                        return ;
+                    }
+                    common_ops.alert(res.msg);
+                },
+                error:function(res) {
+                    if (typeof res === 'object' && res.status !== 500) {
+                        common_ops.alert(res.responseJSON.message);
+                    } else {
+                        common_ops.alert('服务器错误~~~');
+                    }
+                }
+            });
+        });
     },
     setItem:function( book_id,quantity ){
         $.ajax({

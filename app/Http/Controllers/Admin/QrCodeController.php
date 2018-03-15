@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Models\MarketQrCode;
 use App\Http\Models\OauthMemberBind;
-use App\Http\Models\QrCodeScanHistory;
 use App\Http\Services\wechat\RequestService;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;

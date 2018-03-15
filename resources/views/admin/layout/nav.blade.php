@@ -10,8 +10,8 @@
                     <img alt="image" class="img-circle" src="/images/web/logo.png" />
                 </div>
             </li>
-            <li class="dashboard">
-                <a href="/web/dashboard/index"><i class="fa fa-dashboard fa-lg"></i>
+            <li class="dashboard {{substr(request()->getPathInfo(), 0, 14) == '/admin/home' ? 'active' : ''}}">
+                <a href="/admin/home"><i class="fa fa-dashboard fa-lg"></i>
                     <span class="nav-label">仪表盘</span></a>
             </li>
             <li class="account {{substr(request()->getPathInfo(), 0, 14) == '/admin/account' ? 'active' : ''}}">
@@ -33,7 +33,7 @@
                 <a href="/admin/qrcode"><i class="fa fa-share-alt fa-lg"></i> <span class="nav-label">营销渠道</span></a>
             </li>
             <li class="stat {{substr(request()->getPathInfo(), 0, 11) == '/admin/stat' ? 'active' : ''}}">
-                <a href="/admin/stat"><i class="fa fa-bar-chart fa-lg"></i> <span class="nav-label">统计管理</span></a>
+                <a href="/admin/statistics"><i class="fa fa-bar-chart fa-lg"></i> <span class="nav-label">统计管理</span></a>
             </li>
         </ul>
 

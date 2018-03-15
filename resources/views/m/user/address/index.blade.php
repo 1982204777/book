@@ -8,6 +8,7 @@
     <span>常用收货地址</span>
 </div>
 	<ul class="address_list">
+		@if($member_addresses->isNotEmpty())
 		@foreach($member_addresses as $address)
     	<li>
 		<p><span>{{$address->nickname}}</span>{{$address->mobile}}</p>
@@ -23,6 +24,9 @@
 		</div>
 		</li>
 			@endforeach
+			@else
+			<h4 style="text-align: center;padding-top: 1rem;">连个收货地址都没有，还搞啥互联网哇~~~</h4>
+		@endif
     </ul>
 
 

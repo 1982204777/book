@@ -52,10 +52,16 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::resource('/member', 'MemberController');
     Route::post('/member/ops', 'MemberController@ops');
 
+//    财务管理
+    Route::resource('/finance', 'FinanceController');
+
 //    营销渠道
     Route::get('/qrcode/make', 'QrCodeController@makeQrCode');
     Route::resource('/qrcode', 'QrCodeController');
     Route::post('/qrcode/{id}/delete', 'QrCodeController@destroy');
+
+//    统计管理
+    Route::resource('/statistics', 'StatisticsController');
 
 //    图片上传
     Route::post('/upload/pic', 'UploadController@uploadImage');

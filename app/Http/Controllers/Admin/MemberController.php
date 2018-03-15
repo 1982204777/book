@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Models\Member;
+use App\Http\Services\ConstantMapService;
 use Illuminate\Http\Request;
 
 class MemberController extends BaseController
@@ -120,9 +121,12 @@ class MemberController extends BaseController
 
     public function show($id)
     {
-        $member = Member::find($id);
+        $member = Member::where('id', $id)
+            ->with('pay_orders')
+            ->first();
+        $pay_status_mapping = ConstantMapService::$pay_status_mapping;
 
-        return view('admin/member/detail', compact('member'));
+        return view('admin/member/detail', compact('member', 'pay_status_mapping'));
     }
 
     public function ops(Request $request)

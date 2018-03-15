@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Wechat;
 
 use App\Http\Models\Book;
 use App\Http\Models\City;
+use App\Http\Models\Member;
 use App\Http\Models\MemberAddress;
 use App\Http\Models\MemberCart;
 use App\Http\Models\MemberFav;
@@ -307,10 +308,66 @@ class ProductController extends BaseController
         return ajaxReturn('success');
     }
 
+    public function cartOrder(Request $request)
+    {
+        $cart_ids = $request->post('cart_ids', []);
+        if ($request->isMethod('get')) {
+            $cart_ids = explode(',', $cart_ids);
+            $carts = MemberCart::whereIn('id', $cart_ids)
+                    ->with('book')
+                    ->get()
+                    ->toArray();
+            $product_list = [];
+            foreach ($carts as $key => $cart) {
+                $product_list[$key]['id'] = $cart['book']['id'];
+                $product_list[$key]['name'] = $cart['book']['name'];
+                $product_list[$key]['main_img'] = $cart['book']['main_img'];
+                $product_list[$key]['price'] = $cart['book']['price'];
+                $product_list[$key]['quantity'] = $cart['quantity'];
+                $product_list[$key]['total_price'] = sprintf('%.2f', $cart['quantity'] * $cart['book']['price']);
+            }
+            $member_id = $request->attributes->get('member')->id;
+            $member_addresses = MemberAddress::where('member_id', $member_id)
+                    ->where('status', 1)
+                    ->get()
+                    ->toArray();
+            $city_mapping = City::whereIn('id', array_column($member_addresses, 'area_id'))
+                    ->select('id', 'province', 'city', 'area')
+                    ->get()
+                    ->keyBy('id')
+                    ->toArray();
+            $address_list = [];
+            foreach ($member_addresses as $key => $address) {
+                $tmp_address = '';
+                $tmp_address_info = $city_mapping[$address['area_id']];
+                $tmp_address .= $tmp_address_info['province'] . $tmp_address_info['city'] . $tmp_address_info['area'] . $address['address'];
+                $address_list[$key]['address'] = $tmp_address;
+                $address_list[$key]['name'] = $address['nickname'];
+                $address_list[$key]['mobile'] = $address['mobile'];
+                $address_list[$key]['id'] = $address['id'];
+                $address_list[$key]['is_default'] = $address['is_default'];
+            }
+            $total_price = 0;
+            foreach ($product_list as $item) {
+                $total_price += $item['total_price'];
+            }
+            $total_price = sprintf('%.2f', $total_price);
+
+            return view('m/product/order', compact('address_list', 'product_list', 'total_price'));
+        }
+
+        if (!$cart_ids) {
+            return ajaxReturn('请选择要购买的图书~~~', -1);
+        }
+
+        return ajaxReturn('success');
+    }
+
     public function placeOrder(Request $request)
     {
         $product_items = $request->post('product_items', []);
         $address_id = $request->post('address_id', 0);
+        $source = $request->post('source', '');
         if (!$product_items) {
             return ajaxReturn('请选择商品之后再提交~~~', -1);
         }
@@ -356,6 +413,11 @@ class ProductController extends BaseController
         $res = PayOrderService::placePayOrder($member->id, $items, $params);
         if (!$res) {
             return ajaxReturn('提交失败，失败原因：' . PayOrderService::getLastErrorMsg(), PayOrderService::getLastErrorCode());
+        }
+        //如果从购物车创建订单，需要清空购物车了
+        if ($source == "cart") {
+            MemberCart::where('member_id', $member->id)
+                ->delete();
         }
 
         return ajaxReturn([

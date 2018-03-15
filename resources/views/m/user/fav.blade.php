@@ -4,6 +4,9 @@
 @endsection
 @section('content')
 <div style="min-height: 500px;">
+	<div class="page_title clearfix">
+		<span>我的收藏</span>
+	</div>
 	<ul class="fav_list">
 		@if($favs->isNotEmpty())
 		@foreach($favs as $fav)

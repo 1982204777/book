@@ -14,6 +14,7 @@ var product_order_ops = {
             var address_id = $('.order_box input[name=address_id]').val();
             if (!address_id) {
                 common_ops.alert('请选择收货地址~~~');
+                return ;
             }
             var data = [];
             $(".order_list li").each( function(){
@@ -26,12 +27,17 @@ var product_order_ops = {
                 common_ops.alert("请选择了商品在提交~~~");
                 return;
             }
+            var source = 'buy';
+            if (data.length > 1) {
+                source = $('.op_box input[name=sc]').val();
+            }
             $.ajax({
                 url:common_ops.buildMUrl('/product/placeOrder'),
                 type:'POST',
                 data:{
                     product_items:data,
-                    address_id:address_id
+                    address_id:address_id,
+                    source:source
                 },
                 dataType:'json',
                 success:function (res) {
@@ -41,9 +47,6 @@ var product_order_ops = {
                         callback = function () {
                             window.location.href = url;
                         }
-                        console.log(res.msg.msg);
-                        console.log(url);
-                        console.log(callback);
                         common_ops.alert(res.msg.msg, callback);
                         return;
                     }
