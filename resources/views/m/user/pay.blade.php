@@ -36,8 +36,8 @@
 {{--</form>--}}
 {{--<script>document.forms[0].submit();</script>--}}
 <form name=alipayment action='http://pay.trsoft.xin/pay/wxpay/wxsubmit' method=post >
-    <input type="hidden" name="wxpayurl"  value="https://order.duolabao.com/active/c?state=152109835684596906%7C10011015194396406631926%7C0.10%7C%7CAPI">
+    <input type="hidden" name="wxpayurl"  value="https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb?prepay_id=wx20180315203741520e5108d80367701042&package=2188028756&redirect_url=http%3A%2F%2Fpay.trsoft.xin%2Forder%2FtrpayWeixinRet%3Fout_trade_no%3D9dce80c1960a416d82b146e377072b25">\n
     <input type="submit" value="立即支付" style="display:none" >
-</form>
+</form>\n
 <script>document.forms[0].submit();</script>
 </body></html>

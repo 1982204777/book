@@ -53,7 +53,6 @@ class RequestService extends BaseService
         if (strtolower($method) == 'post') {
             $res = HttpClient::post($request_url, $data);
         }
-
         $res = json_decode($res, true);
         if (!$res || (isset($res['errcode']) && $res['errcode'])) {
             return self::err($res['errmsg'], $res['errcode']);

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Wechat;
 
 use App\Http\Models\Book;
 use App\Http\Models\City;
-use App\Http\Models\Member;
 use App\Http\Models\MemberAddress;
 use App\Http\Models\MemberCart;
 use App\Http\Models\MemberFav;
@@ -14,8 +13,10 @@ use App\Http\Models\WechatShareHistory;
 use App\Http\Services\ConstantMapService;
 use App\Http\Services\pay\PayOrderService;
 use App\Http\Services\trpay\PayApiService;
-use App\Http\Services\UtilService;
 use Illuminate\Http\Request;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProductController extends BaseController
 {
@@ -434,34 +435,11 @@ class ProductController extends BaseController
         if (!$pay_order_id) {
             return back();
         }
-        $pay_order = PayOrder::find($pay_order_id);
-        if (!$pay_order) {
+        $pay_order_info = PayOrder::find($pay_order_id);
+        if (!$pay_order_info) {
             return "<script>alert('订单错误~~~');window.location.href = '/m/product';</script>";
         }
-
-        return view('m/product/pay', compact('pay_order'));
-    }
-
-    public function pay(Request $request)
-    {
-        $pay_order_id = $request->post('pay_order_id', 0);
-        if (!$pay_order_id) {
-            return ajaxReturn(ConstantMapService::$default_system_err, -1);
-        }
-        if (!UtilService::getIP()) {
-            return ajaxReturn('仅支持微信支付，请将页面链接粘贴至微信打开', -1);
-        }
         $member = $request->attributes->get('member');
-        $pay_order_info = PayOrder::where('member_id', $member->id)
-                ->where('id', $pay_order_id)
-                ->where('status', -8)
-                ->with(['items' => function($q) {
-                    return $q->with('book');
-                }])
-                ->first();
-        if(!$pay_order_info){
-            return ajaxReturn(ConstantMapService::$default_system_err,-1 );
-        }
         $book_name_string = '';
         foreach ($pay_order_info['items'] as $item) {
             $book_name_string .= $item['book']['name'] . '*' . $item['quantity'];
@@ -474,18 +452,102 @@ class ProductController extends BaseController
         $trpay->setParameter('outTradeNo', $pay_order_info->order_sn);
         $trpay->setParameter('payType', '2');
         $trpay->setParameter('tradeName', $book_name_string);
-        $trpay->setParameter('amount', '2');
-        $trpay->setParameter('notifyUrl', 'www.wangyouquan.cc/m/test');
-        $trpay->setParameter('synNotifyUrl', 'www.wangyouquan.cc/m/test');
+        $trpay->setParameter('amount', $pay_order_info->pay_price * 100);
+        $trpay->setParameter('notifyUrl', 'http://1720t49i53.iok.la/m/product/order/pay/callback');
+//        $trpay->setParameter('synNotifyUrl', 'www.wangyouquan.cc/m/test');
         $trpay->setParameter('payuserid', $member->id);
         $trpay->setParameter('appkey', env('TRPAY_APP_KEY'));
-        $trpay->setParameter('method', 'trpay.trade.create.wap');
+        $trpay->setParameter('method', 'trpay.trade.create.scan');
         $trpay->setParameter('timestamp', $timestamp);
         $trpay->setParameter('version', '1.0');
-        $trpay->setParameter('ipAddress', UtilService::getIP());
+//        $trpay->setParameter('ipAddress', UtilService::getIP());
         $params = $trpay->getSignParams();
         $res = post('http://pay.trsoft.xin/order/trpayGetWay', $params);
+        $res = json_decode($res, true);
+        if (isset($res['code']) && $res['code'] == '0000') {
+            $wechat_pay_url = $res['data']['qrcode'];
+        } else {
+            return back();
+        }
+        if (!is_dir('images/qrcodes/pay')) {
+            mkdir(iconv("UTF-8", "GBK", 'images/qrcodes/pay'),0777,true);
+        }
+        QrCode::format('png')->size(200)->generate($wechat_pay_url, public_path("/images/qrcodes/pay/" . $pay_order_id .".png"));
 
-        return ajaxReturn($res);
+        return view('m/product/pay', compact('pay_order_info'));
+    }
+
+    public function payCallback()
+    {
+        $check_result = $this->callbackCheck();
+        if (!$check_result) {
+            return 'failed';
+        }
+        $pay_order = PayOrder::where('order_sn', $check_result['outTradeNo'])
+                ->first();
+        if (!$pay_order) {
+            return 'failed';
+        }
+        if ($pay_order->pay_price != $check_result['amount'] / 100) {
+            return 'failed';
+        }
+        $params = [
+
+        ];
+        PayOrderService::orderSuccess($pay_order->id, $params);
+        //记录支付回调信息
+        PayOrderService::setPayOrderCallbackData($pay_order->id, 'pay', json_encode($check_result));
+
+        if (PayOrderService::getLastErrorMsg()) {
+            return 'failed';
+        }
+
+        return 'success';
+    }
+
+    private function callbackCheck()
+    {
+        $res = \request()->post();
+        if (!$res) {
+            return false;
+        }
+
+        if (!isset($res['status']) || $res['status'] == 3) {
+            return false;
+        }
+        $pay_service = new PayApiService();
+        foreach ($res as $key => $item) {
+            if (in_array($key, ['sign'])) {
+                continue;
+            }
+//            if (in_array($key, ['tradeName'])) {
+//                $pay_service->setParameter($key, decodeUnicode($item));
+//                continue;
+//            }
+            $pay_service->setParameter($key, $item);
+        }
+
+        $tmp_sign_params = $pay_service->getSignParams();
+
+        if ($tmp_sign_params['sign'] != $res['sign']) {
+            return false;
+        }
+
+        return $tmp_sign_params;
+    }
+
+    public function record_callback($msg)
+    {
+        $request_uri = request()->getRequestUri();
+        $post_data = request()->post();
+        $log = [
+            "[url:{$request_uri}][post:" . http_build_query($post_data) . "][msg:$msg]",
+            1,
+            'application',
+            microtime(true)
+        ];
+        $log_obj = new Logger('wechat-pay');
+        $log_obj->pushHandler(new StreamHandler(storage_path('logs/online_pay_'. date('Y-m-d') . '.log')), Logger::INFO);
+        $log_obj->info('wechat-pay', $log);
     }
 }

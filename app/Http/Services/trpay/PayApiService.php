@@ -3,6 +3,9 @@
 namespace App\Http\Services\trpay;
 
 
+use App\Http\Models\order\PayOrder;
+use Illuminate\Support\Facades\DB;
+
 class PayApiService
 {
     private $params = [];

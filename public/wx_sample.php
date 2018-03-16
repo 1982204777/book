@@ -9,8 +9,8 @@ require './Medoo.php';
 define("TOKEN", "wangyouquan");
 
 $wechatObj = new wechatCallbackapiTest();
-//$wechatObj->valid();
-$wechatObj->responseMsg();
+$wechatObj->valid();
+//$wechatObj->responseMsg();
 
 class wechatCallbackapiTest
 {
@@ -30,7 +30,7 @@ class wechatCallbackapiTest
 
     public function valid()
     {
-        $echoStr = $_GET["echostr"];
+        $echoStr = isset($_GET["echostr"]) ? $_GET['echostr'] : '';
     //valid signature , option
         if($this->checkSignature()){
         	echo $echoStr;
@@ -93,9 +93,9 @@ class wechatCallbackapiTest
             throw new Exception('TOKEN is not defined!');
         }
         
-        $signature = $_GET["signature"];
-        $timestamp = $_GET["timestamp"];
-        $nonce = $_GET["nonce"];
+        $signature = isset($_GET["signature"]) ? $_GET['signature'] : '';
+        $timestamp = isset($_GET["timestamp"]) ? $_GET['timestamp'] : '';
+        $nonce = isset($_GET["nonce"]) ? $_GET['nonce'] : '';
         		
 		$token = TOKEN;
 		$tmpArr = array($token, $timestamp, $nonce);

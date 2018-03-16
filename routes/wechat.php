@@ -15,9 +15,11 @@ Route::get('/menu/set', '\App\Http\Controllers\Wechat\wx\MenuController@setMenu'
 Route::get('/oauth/login', 'OauthController@login');
 Route::get('/oauth/callback', 'OauthController@callback');
 Route::get('/oauth/logout', 'OauthController@logout');
-Route::any('/test', '\App\Http\Controllers\Wechat\wx\MenuController@test');
+Route::get('/sample', '\App\Http\Controllers\Wechat\wx\MsgController@index');
 
 Route::get('/jssdk/sign', '\App\Http\Controllers\Wechat\wx\JssdkController@index');
+
+Route::post('/product/order/pay/callback', 'ProductController@payCallback');
 
 Route::get('/bind', 'BindController@index');
 Route::post('/bind', 'BindController@bind');
@@ -39,7 +41,6 @@ Route::group(['middleware' => 'checkWechatLogin'], function() {
     Route::match(['get', 'post'],'/product/cartOrder', 'ProductController@cartOrder');
     Route::post('/product/placeOrder', 'ProductController@placeOrder');
     Route::get('/product/order/pay', 'ProductController@payView');
-    Route::post('/product/order/pay', 'ProductController@pay');
 
     Route::get('/user', 'UserController@index');
     Route::get('/user/cart', 'UserController@cart');

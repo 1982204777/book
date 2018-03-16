@@ -7,10 +7,9 @@ class UtilService
 {
     public static function getIP()
     {
-        if (!empty($_SERVER['HTTP_X_FORWARD_FOR'])) {
-            return $_SERVER['HTTP_X_FORWARD_FOR'];
+        if (!empty($_SERVER['HTTP_X_REAL_IP'])) {
+            return $_SERVER['HTTP_X_REAL_IP'];
         }
-
         return $_SERVER['REMOTE_ADDR'];
     }
 

@@ -4,9 +4,11 @@ namespace App\Http\Services\pay;
 
 
 use App\Http\Models\order\PayOrder;
+use App\Http\Models\order\PayOrderCallbackData;
 use App\Http\Models\order\PayOrderItem;
 use App\Http\Services\BaseService;
 use App\Http\Services\book\BookService;
+use App\Http\Services\QueueListService;
 use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
 
@@ -108,5 +110,79 @@ class PayOrderService extends BaseService
         } while (PayOrder::where('order_sn', $order_sn)->count());
 
         return $order_sn;
+    }
+
+    public static function orderSuccess($pay_order_id, $params = [])
+    {
+        $date_now = date("Y-m-d H:i:s");
+        DB::beginTransaction();
+        try {
+            $pay_order_info = PayOrder::find($pay_order_id);
+            if (!$pay_order_info || !in_array($pay_order_info['status'], [-8,-7])) {//只有-8，-7状态才可以操作
+                return true;
+            }
+
+            $pay_order_info->pay_sn = isset($params['pay_sn'])?$params['pay_sn']:"";
+            $pay_order_info->status = 1;
+            $pay_order_info->express_status = -7;
+            $pay_order_info->pay_time = $date_now;
+            $pay_order_info->save();
+            $items = PayOrderItem::where('pay_order_id', $pay_order_id)
+                    ->get();
+
+            foreach($items as $_item){
+                switch($_item->target_type){
+                    case 1://书籍购买
+                        BookService::confirmOrderItem($_item['id']);
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            logger(7);
+            DB::rollback();
+            return self::err($e->getMessage(), -1);
+        }
+
+        //需要做一个队列数据库了,用队里处理销售月统计
+        QueueListService::addQueue("pay", [
+            'member_id' => $pay_order_info->member_id,
+            'pay_order_id' => $pay_order_info->id,
+        ]);
+
+        return true;
+    }
+
+    public static function setPayOrderCallbackData($pay_order_id,$type,$callback = '')
+    {
+        if(!$pay_order_id){
+            return self::err("pay_order_id不能为空！", -1);
+        }
+        if(!in_array($type,['pay','refund'])){
+            return self::err("类型参数错误！", -1);
+        }
+        $pay_order = PayOrder::where('id', $pay_order_id)->first();
+        if(!$pay_order){
+            return self::err("找不到该订单！");
+        }
+
+        $callback_data = PayOrderCallbackData::where('pay_order_id', $pay_order_id)->first();
+        if (!$callback_data) {
+            $callback_data = new PayOrderCallbackData();
+            $callback_data->pay_order_id = $pay_order_id;
+        }
+        if ($type == "refund") {
+            $callback_data->refund_data = $callback;
+            $callback_data->pay_data = '';
+        } else {
+            $callback_data->pay_data = $callback;
+            $callback_data->refund_data = '';
+        }
+
+        $callback_data->save();
+
+        return true;
     }
 }
