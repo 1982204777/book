@@ -24,15 +24,6 @@ class MsgController
         // 获取post的xml数据
         // 因为很多都设置了register_globals禁止， 不能使用$_GLOBALS['HTTP_RAW_POST_DATA']
         $xml_data = file_get_contents("php://input");
-
-//        $xml_data = "
-//        <xml><ToUserName><![CDATA[gh_9604bdaf6f02]]></ToUserName>
-//<FromUserName><![CDATA[oTruL0ba0E5wIDpEnJF6UGz4mlGc]]></FromUserName>
-//<CreateTime>1519827580</CreateTime>
-//<MsgType><![CDATA[text]]></MsgType>
-//<Content><![CDATA[测试]]></Content>
-//<MsgId>6527609752482950381</MsgId>
-//</xml>";
         if (!$xml_data) {
             return 'error xml~~~';
         }
@@ -55,7 +46,7 @@ class MsgController
                 }
                 break;
             case "event":
-//                $res = $this->parseEvent( $xml_obj );
+                $res = $this->parseEvent( $xml_obj );
                 break;
             default:
                 break;

@@ -11,20 +11,6 @@ class MemberController extends BaseController
 {
     public function index(Request $request)
     {
-        $str = '{"amount":"2","appkey":"178c8183c90b46288080c72dce4ae307","method":"trpay.trade.notify","notifyTime":"2018-03-16 12:52:32","outTradeNo":"2018031610151485","payType":"2","payUserId":"15","sign":"B451FBFC5CC8C1ED9CECAE29A0634CCD","status":"2","timestamp":"1521175952561","tradeName":"PHP\u4ece\u5165\u95e8\u5230\u7cbe\u901a*1","version":"1.0"}';
-        $str = json_decode($str, true);
-        $pay_service = new PayApiService();
-        foreach ($str as $key => $item) {
-            if (in_array($key, ['sign'])) {
-                continue;
-            }
-//            if (in_array($key, ['tradeName'])) {
-//                $pay_service->setParameter($key, decodeUnicode($item));
-//                continue;
-//            }
-            $pay_service->setParameter($key, $item);
-        }
-        dd($pay_service->getSignParams());
         $input = $request->input();
         $status = array_get($input, 'status', -1);
         $keywords = array_get($input, 'keywords', '');

@@ -453,7 +453,7 @@ class ProductController extends BaseController
         $trpay->setParameter('payType', '2');
         $trpay->setParameter('tradeName', $book_name_string);
         $trpay->setParameter('amount', $pay_order_info->pay_price * 100);
-        $trpay->setParameter('notifyUrl', 'http://1720t49i53.iok.la/m/product/order/pay/callback');
+        $trpay->setParameter('notifyUrl', 'http://' . $request->getHttpHost() .'/m/product/order/pay/callback');
 //        $trpay->setParameter('synNotifyUrl', 'www.wangyouquan.cc/m/test');
         $trpay->setParameter('payuserid', $member->id);
         $trpay->setParameter('appkey', env('TRPAY_APP_KEY'));
