@@ -7,6 +7,7 @@ use App\Http\Models\MemberCart;
 use App\Http\Models\MemberFav;
 use App\Http\Models\order\PayOrder;
 use App\Http\Services\ConstantMapService;
+use App\Http\Services\pay\PayOrderService;
 use function foo\func;
 use Illuminate\Http\Request;
 
@@ -44,26 +45,42 @@ class UserController extends BaseController
                     }])
                     ->get()
                     ->toArray();
-//        dd($pay_orders);
         $pay_status_mapping = ConstantMapService::$pay_status_mapping;
+        $express_status_mapping = ConstantMapService::$express_status_mapping_for_member;
 
-        return view('m/user/order', compact('pay_orders', 'pay_status_mapping'));
+        return view('m/user/order', compact('pay_orders', 'pay_status_mapping', 'express_status_mapping'));
     }
 
     public function orderOps(Request $request)
     {
         $pay_order_id = $request->post('pay_order_id', 0);
+        $act = $request->post('act', '');
         if (!$pay_order_id) {
             return ajaxReturn('请选择订单~~~', -1);
+        }
+        if (!in_array($act, ['close', 'confirm_express'])) {
+            return ajaxReturn(ConstantMapService::$default_system_err, -1);
         }
         $pay_order = PayOrder::find($pay_order_id);
         if (!$pay_order) {
             return ajaxReturn('该订单不存在~~~', -1);
         }
-        $pay_order->status = 0;
-        if ($res = $pay_order->save()) {
-            return ajaxReturn('操作成功~~~');
+
+        switch ($act) {
+            case 'close':
+                if ($pay_order->status = -8) {
+                    PayOrderService::closeOrder($pay_order->id);
+                }
+                break;
+            case 'confirm_express':
+                break;
         }
+
+        if ($err_msg = PayOrderService::getLastErrorMsg()) {
+            return ajaxReturn($err_msg, -1);
+        }
+
+        return ajaxReturn('操作成功~~~');
     }
 
     public function fav()

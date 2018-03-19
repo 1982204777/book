@@ -45,7 +45,7 @@ class BookService extends BaseService
 
         $order_info = PayOrder::where('id', $order_item_info->pay_order_id)
                 ->first();
-        if(!$order_info){
+        if (!$order_info) {
             return false;
         }
 

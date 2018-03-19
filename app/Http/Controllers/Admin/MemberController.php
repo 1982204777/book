@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Models\Member;
 use App\Http\Services\ConstantMapService;
-use App\Http\Services\trpay\PayApiService;
 use Illuminate\Http\Request;
 
 class MemberController extends BaseController

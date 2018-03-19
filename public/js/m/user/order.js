@@ -21,7 +21,8 @@ var user_order_ops = {
                 url:common_ops.buildMUrl('/user/orderOps'),
                 type:'POST',
                 data:{
-                    pay_order_id:pay_order_id
+                    pay_order_id:pay_order_id,
+                    act:"close"
                 },
                 dataType:'json',
                 success:function (res) {

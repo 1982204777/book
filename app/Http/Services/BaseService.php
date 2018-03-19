@@ -9,10 +9,16 @@ class BaseService
 
     protected static $err_code = null;
 
-    public static function err($msg = '', $code = '')
+    public static function err($msg = '', $code = -1)
     {
-        self::$err_msg = $msg;
+        if ($msg) {
+            self::$err_msg = $msg;
+        } else {
+            self::$err_msg = '操作失败';
+        }
         self::$err_code = $code;
+
+        return false;
     }
 
     public static function getLastErrorMsg()

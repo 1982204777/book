@@ -3,12 +3,14 @@
 namespace App\Http\Services\pay;
 
 
+use App\Http\Models\Book;
 use App\Http\Models\order\PayOrder;
 use App\Http\Models\order\PayOrderCallbackData;
 use App\Http\Models\order\PayOrderItem;
 use App\Http\Services\BaseService;
 use App\Http\Services\book\BookService;
 use App\Http\Services\QueueListService;
+use App\Http\Services\wechat\TemplateMsg;
 use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
 
@@ -122,7 +124,7 @@ class PayOrderService extends BaseService
                 return true;
             }
 
-            $pay_order_info->pay_sn = isset($params['pay_sn'])?$params['pay_sn']:"";
+            $pay_order_info->pay_sn = isset($params['pay_sn']) ? $params['pay_sn'] : "";
             $pay_order_info->status = 1;
             $pay_order_info->express_status = -7;
             $pay_order_info->pay_time = $date_now;
@@ -141,12 +143,13 @@ class PayOrderService extends BaseService
             }
             DB::commit();
         } catch (Exception $e) {
-            logger(7);
             DB::rollback();
             return self::err($e->getMessage(), -1);
         }
+        //发送支付成功
+//        TemplateMsg::payNotice($pay_order_id);
 
-        //需要做一个队列数据库了,用队里处理销售月统计
+        //需要做一个队列数据库了,用队列处理销售月统计
         QueueListService::addQueue("pay", [
             'member_id' => $pay_order_info->member_id,
             'pay_order_id' => $pay_order_info->id,
@@ -155,16 +158,16 @@ class PayOrderService extends BaseService
         return true;
     }
 
-    public static function setPayOrderCallbackData($pay_order_id,$type,$callback = '')
+    public static function setPayOrderCallbackData($pay_order_id, $type, $callback = '')
     {
-        if(!$pay_order_id){
+        if (!$pay_order_id) {
             return self::err("pay_order_id不能为空！", -1);
         }
-        if(!in_array($type,['pay','refund'])){
+        if (!in_array($type,['pay','refund'])) {
             return self::err("类型参数错误！", -1);
         }
         $pay_order = PayOrder::where('id', $pay_order_id)->first();
-        if(!$pay_order){
+        if (!$pay_order) {
             return self::err("找不到该订单！");
         }
 
@@ -184,5 +187,32 @@ class PayOrderService extends BaseService
         $callback_data->save();
 
         return true;
+    }
+
+    public static function closeOrder($pay_order_id)
+    {
+        $pay_order = PayOrder::find($pay_order_id);
+        if (!$pay_order) {
+            return self::err('订单不存在～～～');
+        }
+        $pay_order_items = PayOrderItem::where('pay_order_id', $pay_order->id)
+                ->get()
+                ->toArray();
+        if ($pay_order_items) {
+            foreach ($pay_order_items as $key => $item) {
+                $tmp_book_model = Book::find($item['target_id']);
+                switch ($item['target_type']) {
+                    case 1:
+                        $tmp_book_model->stock += $item['quantity'];
+                        $tmp_book_model->save();
+                        BookService::setStockChangeLog($item['target_id'], $item['quantity'], "订单过期释放库存" );
+                        break;
+                }
+            }
+        }
+
+        $pay_order->status = 0;
+
+        return $pay_order->save();
     }
 }

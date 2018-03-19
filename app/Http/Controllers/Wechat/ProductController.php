@@ -454,13 +454,11 @@ class ProductController extends BaseController
         $trpay->setParameter('tradeName', $book_name_string);
         $trpay->setParameter('amount', $pay_order_info->pay_price * 100);
         $trpay->setParameter('notifyUrl', 'http://' . $request->getHttpHost() .'/m/product/order/pay/callback');
-//        $trpay->setParameter('synNotifyUrl', 'www.wangyouquan.cc/m/test');
         $trpay->setParameter('payuserid', $member->id);
         $trpay->setParameter('appkey', env('TRPAY_APP_KEY'));
         $trpay->setParameter('method', 'trpay.trade.create.scan');
         $trpay->setParameter('timestamp', $timestamp);
         $trpay->setParameter('version', '1.0');
-//        $trpay->setParameter('ipAddress', UtilService::getIP());
         $params = $trpay->getSignParams();
         $res = post('http://pay.trsoft.xin/order/trpayGetWay', $params);
         $res = json_decode($res, true);
@@ -483,6 +481,8 @@ class ProductController extends BaseController
         if (!$check_result) {
             return 'failed';
         }
+        $this->record_callback();
+
         $pay_order = PayOrder::where('order_sn', $check_result['outTradeNo'])
                 ->first();
         if (!$pay_order) {
@@ -491,16 +491,25 @@ class ProductController extends BaseController
         if ($pay_order->pay_price != $check_result['amount'] / 100) {
             return 'failed';
         }
-        $params = [
 
+        $res = $this->queryTrpayOrder($pay_order);
+        if (!isset($res['trade_state']) || $res['trade_state'] != 'SUCCESS') {
+            return 'failed';
+        }
+        $res['trade_state_tip'] = decodeUnicode($res['trade_state_tip']);
+        $params = [
+            'pay_sn' => $res['tradeNo']
         ];
         PayOrderService::orderSuccess($pay_order->id, $params);
-        //记录支付回调信息
-        PayOrderService::setPayOrderCallbackData($pay_order->id, 'pay', json_encode($check_result));
+
+        PayOrderService::setPayOrderCallbackData($pay_order->id, 'pay', json_encode($res['data']));
 
         if (PayOrderService::getLastErrorMsg()) {
             return 'failed';
         }
+
+        //队列发送模板消息
+        $this->dispatch(new \App\Jobs\SendMessage());
 
         return 'success';
     }
@@ -520,10 +529,6 @@ class ProductController extends BaseController
             if (in_array($key, ['sign'])) {
                 continue;
             }
-//            if (in_array($key, ['tradeName'])) {
-//                $pay_service->setParameter($key, decodeUnicode($item));
-//                continue;
-//            }
             $pay_service->setParameter($key, $item);
         }
 
@@ -536,12 +541,32 @@ class ProductController extends BaseController
         return $tmp_sign_params;
     }
 
-    public function record_callback($msg)
+    private function queryTrpayOrder($pay_order)
+    {
+        //记录支付回调信息
+        $pay_order_info = PayOrder::find($pay_order->id);
+        $trpay = new PayApiService();
+        $timestamp = time();
+        $trpay->setParameter('outTradeNo', $pay_order_info->order_sn);
+        $trpay->setParameter('payType', '2');
+        $trpay->setParameter('appkey', env('TRPAY_APP_KEY'));
+        $trpay->setParameter('method', 'trpay.trade.query.scan');
+        $trpay->setParameter('timestamp', $timestamp);
+        $trpay->setParameter('version', '1.0');
+        $params = $trpay->getSignParams();
+        $res = post('http://pay.trsoft.xin/order/trpayGetWay', $params);
+        $res = json_decode($res, true);
+
+        return $res;
+    }
+
+    private function record_callback()
     {
         $request_uri = request()->getRequestUri();
         $post_data = request()->post();
+        $post_data['tradeName'] = decodeUnicode($post_data['tradeName']);
         $log = [
-            "[url:{$request_uri}][post:" . http_build_query($post_data) . "][msg:$msg]",
+            "[url:{$request_uri}][post:" . http_build_query($post_data) . "]",
             1,
             'application',
             microtime(true)
