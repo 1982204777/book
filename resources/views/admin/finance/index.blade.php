@@ -48,11 +48,11 @@
 			@foreach($pay_order_list as $item)
 			<tr>
 				<td>{{$item['order_sn']}}</td>
-				@foreach($item['items'] as $item1)
 				<td>
+					@foreach($item['items'] as $item1)
 					{{$item1['name']}} × {{$item1['quantity']}}<br/>
+					@endforeach
 				</td>
-				@endforeach
 				<td>{{$item['pay_price']}}</td>
 				<td>{{$item['pay_time']}}</td>
 				<td>{{$pay_status_mapping[$item['status']]}}</td>

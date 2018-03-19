@@ -16,4 +16,9 @@ class Member extends BaseModel
     {
         return $this->hasMany(PayOrder::class, 'member_id', 'id');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(MemberComment::class, 'member_id', 'id');
+    }
 }

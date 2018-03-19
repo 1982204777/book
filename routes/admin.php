@@ -49,11 +49,14 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::post('/book/ops', 'BookController@ops');
 
 //    会员管理
+    Route::get('/member/comment', 'MemberController@comment');
     Route::resource('/member', 'MemberController');
     Route::post('/member/ops', 'MemberController@ops');
 
 //    财务管理
+    Route::get('/finance/account', 'FinanceController@account');
     Route::resource('/finance', 'FinanceController');
+    Route::post('/finance/express', 'FinanceController@express');
 
 //    营销渠道
     Route::get('/qrcode/make', 'QrCodeController@makeQrCode');

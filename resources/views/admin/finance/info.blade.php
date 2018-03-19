@@ -1,6 +1,6 @@
 @extends('admin.layout.main')
 @section('js')
-	<script type="text/javascript" src="/js/web/finance/index.js"></script>
+	<script type="text/javascript" src="/js/web/finance/info.js"></script>
 @endsection
 @section('content')
 		<div class="row  border-bottom">
@@ -20,6 +20,9 @@
 	<div class="col-lg-12">
 		<div class="row">
 			<div class="col-lg-12">
+                @if($pay_order['status'] == 1 && $pay_order['express_status'] == -7 )
+				<a class="btn btn-outline btn-primary pull-right express_send">确认发货</a>
+                @endif
 				<div class="m-b-md">
 					<h2>订单信息</h2>
 				</div>
@@ -32,7 +35,11 @@
 				<p>会员手机：{{$pay_order['member']['mobile']}}</p>
 				<p>订单总价：{{$pay_order['pay_price']}}</p>
 				<p>订单状态：{{$pay_status_mapping[$pay_order['status']]}}</p>
-								<p>创建时间：{{$pay_order['created_at']}}</p>
+				<p>快递状态：{{$express_status_mapping[$pay_order['express_status']]}}</p>
+				@if($pay_order['pay_time'])
+				<p>支付时间：{{$pay_order['time']}}</p>
+				@endif
+				<p>创建时间：{{$pay_order['created_at']}}</p>
                 <p>收货地址：{{$city_info['province'] . $city_info['city'] . $city_info['area'] . '（' . $pay_order['member']['address']['nickname'] . '）' . $pay_order['member']['address']['mobile']}}
 				</p>
 			</div>
@@ -94,7 +101,7 @@
                             <div class="form-group">
                                 <label class="col-lg-2 control-label">发货信息:</label>
                                 <div class="col-lg-10">
-                                    <label class="control-label">浙江省宁波市330203太阳出来了爬山平（郭威）13774355081</label>
+                                    <label class="control-label">{{$city_info['province'] . $city_info['city'] . $city_info['area'] . '（' . $pay_order['member']['address']['nickname'] . '）' . $pay_order['member']['address']['mobile']}}</label>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -109,7 +116,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <input type="hidden" name="pay_order_id" value="32">
+                <input type="hidden" name="pay_order_id" value="{{$pay_order['id']}}">
                 <button type="button" class="btn btn-primary save">保存</button>
             </div>
         </div>

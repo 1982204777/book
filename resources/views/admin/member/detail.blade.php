@@ -10,7 +10,7 @@
                         <a href="/admin/member">会员列表</a>
                     </li>
                     <li  >
-                        <a href="/web/member/comment">会员评论</a>
+                        <a href="/admin/member/comment">会员评论</a>
                     </li>
                 </ul>
             </div>
@@ -103,32 +103,13 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>
-                                                2017-03-17 16:48:31                                        </td>
-                                            <td>
-                                                8                                                </td>
-                                            <td>
-                                                哈哈哈哈或哈哈或                                        </td>
-                                            <td>
-                                                2017-03-17 16:41:11                                        </td>
-                                            <td>
-                                                6                                                </td>
-                                            <td>
-                                                书是正品的，非常不错的                                        </td>
-                                            <td>
-                                                2017-03-17 16:41:16                                        </td>
-                                            <td>
-                                                8                                                </td>
-                                            <td>
-                                                书是正品的，非常不错的                                        </td>
-                                            <td>
-                                                2017-03-17 16:41:17                                        </td>
-                                            <td>
-                                                10                                                </td>
-                                            <td>
-                                                服务非常好                                        </td>
-                                        </tr>
+                                        @foreach($member->comments as $comment)
+                                            <tr>
+                                                <td>{{$comment->created_at}}</td>
+                                                <td>{{$comment->score}}</td>
+                                                <td>{{$comment->content}}</td>
+                                            </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>

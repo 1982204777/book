@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Wechat;
 
 
 use App\Http\Models\MemberCart;
+use App\Http\Models\MemberComment;
 use App\Http\Models\MemberFav;
 use App\Http\Models\order\PayOrder;
 use App\Http\Services\ConstantMapService;
@@ -95,7 +96,12 @@ class UserController extends BaseController
 
     public function comment()
     {
-        return view('m/user/comment');
-    }
+        $member = \request()->attributes->get('member');
+        $member_comments = MemberComment::where('member_id', $member->id)
+                ->orderBy('created_at', 'desc')
+                ->with('book')
+                ->get();
 
+        return view('m/user/comment', compact('member_comments'));
+    }
 }

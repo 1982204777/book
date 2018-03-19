@@ -11,7 +11,7 @@
                         <a href="/admin/member">会员列表</a>
                     </li>
                     <li  >
-                        <a href="/web/member/comment">会员评论</a>
+                        <a href="/admin/member/comment">会员评论</a>
                     </li>
                 </ul>
             </div>

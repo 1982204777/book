@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Models\Member;
+use App\Http\Models\MemberComment;
 use App\Http\Services\ConstantMapService;
 use Illuminate\Http\Request;
 
@@ -123,6 +124,7 @@ class MemberController extends BaseController
     {
         $member = Member::where('id', $id)
             ->with('pay_orders')
+            ->with('comments')
             ->first();
         $pay_status_mapping = ConstantMapService::$pay_status_mapping;
 
@@ -155,5 +157,26 @@ class MemberController extends BaseController
         $member->save();
 
         return ajaxReturn($act);
+    }
+
+    public function comment()
+    {
+        $current_page = \request()->get('p', 1);
+        if ($current_page <= 0) {
+            $current_page = 1;
+        }
+        $page = config('common.page');
+        $page['current_page'] = $current_page;
+        $query = MemberComment::query();
+        $page['total_count'] = $query->count();
+        $member_comments = $query->orderBy('created_at', 'desc')
+                    ->offset(($current_page - 1) * $page['page_size'])
+                    ->take($page['page_size'])
+                    ->with('member')
+                    ->with('book')
+                    ->get();
+        $page['page_count'] = ceil($page['total_count'] / $page['page_size']);
+
+        return view('admin/member/comment/index', compact('member_comments', 'page'));
     }
 }

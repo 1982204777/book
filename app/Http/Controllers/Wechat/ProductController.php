@@ -7,8 +7,10 @@ use App\Http\Models\Book;
 use App\Http\Models\City;
 use App\Http\Models\MemberAddress;
 use App\Http\Models\MemberCart;
+use App\Http\Models\MemberComment;
 use App\Http\Models\MemberFav;
 use App\Http\Models\order\PayOrder;
+use App\Http\Models\order\PayOrderItem;
 use App\Http\Models\WechatShareHistory;
 use App\Http\Services\ConstantMapService;
 use App\Http\Services\pay\PayOrderService;
@@ -364,6 +366,68 @@ class ProductController extends BaseController
         }
 
         return ajaxReturn('success');
+    }
+
+    /**
+     * 添加评论
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function createComment()
+    {
+        $pay_order_id = \request()->get('pay_order_id', 0);
+        $book_id = \request()->get('book_id', 0);
+        if (!$pay_order_id || !$book_id) {
+            return back();
+        }
+        $pay_order = PayOrder::find($pay_order_id);
+        $book = Book::find($book_id);
+        if (!$pay_order || !$book) {
+            return back();
+        }
+
+        return view('m/product/commentSet', compact('pay_order', 'book'));
+    }
+
+    public function storeComment(Request $request)
+    {
+        $pay_order_id = $request->post('pay_order_id', 0);
+        $book_id = $request->post('book_id', 0);
+        $score = $request->post('score', 0);
+        $content = $request->post('content', '');
+        if ($score <= 0) {
+            return ajaxReturn('请打分～～～', -1);
+        }
+        if (mb_strlen($content, 'utf-8') < 3) {
+            return ajaxReturn('请输入符合要求的评论内容～～～', -1);
+        }
+        $pay_order_info = PayOrder::find($pay_order_id);
+        $pay_order_item_info = PayOrderItem::where('pay_order_id', $pay_order_id)
+                    ->where('target_id', $book_id)
+                    ->first();
+        $book_info = Book::find($book_id);
+        if (!$pay_order_info || !$pay_order_item_info || !$book_info) {
+            return ajaxReturn(ConstantMapService::$default_system_err, -1);
+        }
+        if ($pay_order_item_info['comment_status']) {
+            return ajaxReturn('您已经评论过啦，不能重复评论~~~', -1 );
+        }
+        $member = $request->attributes->get('member');
+
+        $member_comment = new MemberComment();
+        $member_comment->member_id = $member->id;
+        $member_comment->book_id = $book_id;
+        $member_comment->pay_order_id = $pay_order_id;
+        $member_comment->score = $score * 2;
+        $member_comment->content = $content;
+        $member_comment->created_at = date('Y-m-d H:i:s');
+        $member_comment->save();
+
+        $pay_order_item_info->comment_status = 1;
+        $pay_order_item_info->save();
+        $book_info->comment_count += 1;
+        $book_info->save();
+
+        return ajaxReturn('评论成功～～～');
     }
 
     public function placeOrder(Request $request)
