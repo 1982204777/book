@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Models\Member;
 use App\Http\Models\QueueList;
 use App\Http\Services\wechat\TemplateMsg;
 use Illuminate\Bus\Queueable;
@@ -13,7 +14,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class SendMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     /**
      * Create a new job instance.
      *
@@ -43,6 +43,15 @@ class SendMessage implements ShouldQueue
                 case 'pay':
                     $this->handlePay($item->data);
                     break;
+                case 'bind':
+                    $this->handleBind($item->data);
+                    break;
+                case 'express':
+                    $this->handleExpress($item->data);
+                    break;
+                case 'member_avatar':
+                    $this->handleAvatarChange($item->data);
+                    break;
             }
             $item->status = 1;
             $item->save();
@@ -54,6 +63,7 @@ class SendMessage implements ShouldQueue
     private function handlePay($item)
     {
         $data = json_decode($item, true);
+
         if (!isset($data['member_id']) || !isset($data['pay_order_id'])) {
             return false;
         }
@@ -65,4 +75,58 @@ class SendMessage implements ShouldQueue
 
         return true;
     }
+
+    private function handleExpress($item)
+    {
+        $data = json_decode($item, true);
+
+        if (!isset($data['member_id']) || !isset($data['pay_order_id'])) {
+            return false;
+        }
+        if (!$data['member_id'] || !$data['pay_order_id']) {
+            return false;
+        }
+
+        TemplateMsg::expressNotice($data['pay_order_id']);
+
+        return true;
+    }
+
+    private function handleBind($item)
+    {
+        $data = json_decode($item, true);
+
+        if (!isset($data['member_id']) || !isset($data['type']) || !isset($data['openid'])) {
+            return false;
+        }
+        if (!$data['member_id'] || !$data['type'] || !$data['openid']) {
+            return false;
+        }
+
+        TemplateMsg::bindNotice($data['member_id']);
+
+        return true;
+    }
+
+    private function handleAvatarChange($item)
+    {
+        $data = json_decode($item, true);
+
+        if (!isset($data['member_id']) || !isset($data['avatar_url'])) {
+            return false;
+        }
+        if (!$data['member_id'] || !$data['avatar_url']) {
+            return false;
+        }
+
+        $member = Member::find($data['member_id']);
+        $member->avatar = $data['avatar_url'];
+        if ($member->save()) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 }

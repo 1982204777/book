@@ -126,6 +126,9 @@ class BookController extends BaseController
             ->where('id', $id)
             ->with('category')
             ->with('stock_change_logs')
+            ->with(['payOrderItems' => function ($q) {
+                return $q->with('member');
+            }])
             ->first();
 
         return view('admin/book/info', compact('book'));

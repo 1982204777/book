@@ -3,6 +3,8 @@
 namespace App\Http\Models;
 
 
+use App\Http\Models\order\PayOrderItem;
+
 class Book extends BaseModel
 {
     protected $guarded = [];
@@ -15,5 +17,10 @@ class Book extends BaseModel
     public function stock_change_logs()
     {
         return $this->hasMany(BookStockLog::class, 'book_id', 'id');
+    }
+
+    public function payOrderItems()
+    {
+        return $this->hasMany(PayOrderItem::class, 'target_id', 'id');
     }
 }

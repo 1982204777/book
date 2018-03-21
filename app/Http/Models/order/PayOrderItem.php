@@ -4,6 +4,7 @@ namespace App\Http\Models\order;
 
 use App\Http\Models\BaseModel;
 use App\Http\Models\Book;
+use App\Http\Models\Member;
 
 class PayOrderItem extends BaseModel
 {
@@ -12,5 +13,10 @@ class PayOrderItem extends BaseModel
     public function book()
     {
         return $this->belongsTo(Book::class, 'target_id', 'id');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id', 'id');
     }
 }

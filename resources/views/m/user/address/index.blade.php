@@ -30,7 +30,7 @@
     </ul>
 
 
-<div class="op_box">
+<div class="op_box" style="padding-bottom: 80px">
     <a href="/m/user/address/create" class="red_btn" style="color: #ffffff;">添加新地址</a>
 </div>
 </div>

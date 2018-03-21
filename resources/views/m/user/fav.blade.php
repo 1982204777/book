@@ -13,7 +13,7 @@
 		<li>
 		<a href="/m/product/info?id={{$fav->book->id}}">
 			<i class="pic"><img src="{{'/storage/' . $fav->book->main_img}}" style="height: 100px;width: 100px; padding-top:10px;" /></i>
-			<h2>{{$fav->book->name}}</h2>
+			<h2 style="margin-top:10px;	">{{$fav->book->name}}</h2>
 			<b>¥ {{$fav->book->price}}</b>
 		</a>
 		<span class="del_fav" data="{{$fav->id}}"><i class="del_fav_icon"></i></span>

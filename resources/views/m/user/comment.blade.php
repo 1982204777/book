@@ -4,7 +4,7 @@
     <script src="/js/m/user/comment.js"></script>
 @endsection
 @section('content')
-<div style="min-height: 500px;">
+<div style="min-height: 500px; padding-bottom: 80px;">
 	<div class="page_title clearfix">
     <span>我的评论</span>
 </div>
@@ -16,8 +16,8 @@
             <div style=" overflow: hidden;">
             <a href="/m/product/info?id={{$member_comment->book->id}}">
                 <i class="pic"><img src="{{makeImgUrl($member_comment->book->main_img)}}" style="float: left; height: 100px;width: 100px; padding-top:10px;"></i>
-                <div style="float: right; padding-right: 100px;">
-                    <h3 style="margin-top: 30px;">{{$member_comment->book->name}}</h3>
+                <div style="float: left; margin-left: 20px;">
+                    <h3 style="margin-top: 10px; margin-bottom: 30px;">{{$member_comment->book->name}}</h3>
                     <b>¥ {{$member_comment->book->price}}</b>
                 </div>
             </a>

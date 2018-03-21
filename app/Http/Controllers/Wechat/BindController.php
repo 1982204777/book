@@ -85,7 +85,9 @@ class BindController extends BaseController
                     'member_id' => $model_bind->member_id,
                     'type' => 1,
                     'openid' => $model_bind->openid
-                ] );
+                ]);
+                //队列发送模板消息
+                $this->dispatch(new \App\Jobs\SendMessage());
             }
         }
 

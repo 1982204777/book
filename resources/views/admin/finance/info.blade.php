@@ -37,7 +37,7 @@
 				<p>订单状态：{{$pay_status_mapping[$pay_order['status']]}}</p>
 				<p>快递状态：{{$express_status_mapping[$pay_order['express_status']]}}</p>
 				@if($pay_order['pay_time'])
-				<p>支付时间：{{$pay_order['time']}}</p>
+				<p>支付时间：{{$pay_order['pay_time']}}</p>
 				@endif
 				<p>创建时间：{{$pay_order['created_at']}}</p>
                 <p>收货地址：{{$city_info['province'] . $city_info['city'] . $city_info['area'] . '（' . $pay_order['member']['address']['nickname'] . '）' . $pay_order['member']['address']['mobile']}}

@@ -1,6 +1,8 @@
 @extends('admin/layout/main')
 @section('js')
-    <script type="text/javascript" src="/js/web/member/index.js"></script>
+    <script type="text/javascript" src="/plugins/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="/js/web/home/index.js"></script>
+    <script type="text/javascript" src="/js/web/chart.js"></script>
 @endsection
 @section('content')
         <div class="wrapper wrapper-content">
@@ -9,11 +11,11 @@
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
                             <span class="label label-primary pull-right">日统计</span>
-                            <h5>营收概况</h5>
+                            <h5>营收概况（元）</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">0.00</h1>
-                            <small>近30日：7029.00</small>
+                            <h1 class="no-margins">{{$data['finance']['today']}}</h1>
+                            <small>近30日：{{$data['finance']['month']}}</small>
                         </div>
                     </div>
                 </div>
@@ -24,8 +26,8 @@
                             <h5>订单</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">0</h1>
-                            <small>近30日：6664</small>
+                            <h1 class="no-margins">{{$data['order']['today']}}</h1>
+                            <small>近30日：{{$data['order']['month']}}</small>
                         </div>
                     </div>
                 </div>
@@ -36,9 +38,9 @@
                             <h5>会员</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">73</h1>
-                            <small>今日新增：0</small>
-                            <small>近30日新增：549</small>
+                            <h1 class="no-margins">{{$data['member']['total']}}</h1>
+                            <small>今日新增：{{$data['member']['today']}}</small>
+                            <small>近30日新增：{{$data['member']['month']}}</small>
                         </div>
                     </div>
                 </div>
@@ -49,8 +51,8 @@
                             <h5>分享</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">0</h1>
-                            <small>近30日：10826</small>
+                            <h1 class="no-margins">{{$data['shared']['today']}}</h1>
+                            <small>近30日：{{$data['shared']['month']}}</small>
                         </div>
                     </div>
                 </div>

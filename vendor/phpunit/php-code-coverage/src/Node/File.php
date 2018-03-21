@@ -388,7 +388,7 @@ class File extends AbstractNode
     }
 
     /**
-     * Calculates coverage statistics for the file.
+     * Calculates coverage stat for the file.
      */
     protected function calculateStatistics()
     {

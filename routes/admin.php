@@ -64,7 +64,15 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::post('/qrcode/{id}/delete', 'QrCodeController@destroy');
 
 //    统计管理
-    Route::resource('/statistics', 'StatisticsController');
+    Route::get('/stat', 'StatController@index');
+    Route::get('/stat/member', 'StatController@member');
+    Route::get('/stat/product', 'StatController@product');
+    Route::get('/stat/share', 'StatController@share');
+
+//    highcharts图表
+    Route::get('/charts/dashboard', 'ChartsController@dashboard');
+    Route::get('/charts/finance', 'ChartsController@finance');
+    Route::get('/charts/share', 'ChartsController@share');
 
 //    图片上传
     Route::post('/upload/pic', 'UploadController@uploadImage');

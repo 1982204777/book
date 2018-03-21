@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\OrderClose::class
+        \App\Console\Commands\OrderClose::class,
+        \App\Console\Commands\DailySiteCount::class,
     ];
 
     /**
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('command:orderClose');
+//         $schedule->command('command:orderClose')->everyThirtyMinutes();
+         $schedule->command('command:DailySiteCount');
     }
 
     /**

@@ -11,12 +11,12 @@
     	<ul class="order_pro_list">
 			@if($carts->isNotEmpty())
 			@foreach($carts as $cart)
-			<li data="{{$cart->id}}">
+			<li data="{{$cart->id}}" data-price="{{$cart->book->price}}">
 			<a href="/m/product/info?id={{$cart->book->id}}" class="pic" >
                 <img src="{{'/storage/' . $cart->book->main_img}}" style="height: 100px;width: 100px;"/>
             </a>
-			<h2><a href="/m/product/info?id={{$cart->book->id}}">{{$cart->book->name}}</a></h2>
-			<div class="order_c_op">
+			<h2 style="padding-top: 10px;"><a href="/m/product/info?id={{$cart->book->id}}">{{$cart->book->name}}</a></h2>
+			<div class="order_c_op" style="margin-top:30px;">
 				<b>¥{{$cart->book->price}}</b>
 				<span class="delC_icon" data="{{$cart->id}}" data-book_id="{{$cart->book->id}}"></span>
 				<div class="quantity-form">

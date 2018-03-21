@@ -24,7 +24,7 @@ class MemberController extends BaseController
         }
         if ($keywords) {
             $query->where('nickname', 'like', '%' . $keywords . '%')
-                ->orWhere('mobile', 'like', '%' . $keywords .'%');
+                ->  orWhere('mobile', 'like', '%' . $keywords .'%');
         }
 
         $page = config('common.page');

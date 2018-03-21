@@ -557,12 +557,12 @@ class ProductController extends BaseController
         }
 
         $res = $this->queryTrpayOrder($pay_order);
-        if (!isset($res['trade_state']) || $res['trade_state'] != 'SUCCESS') {
+        if (!isset($res['code']) || $res['code'] != '0000') {
             return 'failed';
         }
-        $res['trade_state_tip'] = decodeUnicode($res['trade_state_tip']);
+        $res['data']['trade_state_tip'] = decodeUnicode($res['data']['trade_state_tip']);
         $params = [
-            'pay_sn' => $res['tradeNo']
+            'pay_sn' => $res['data']['tradeNo']
         ];
         PayOrderService::orderSuccess($pay_order->id, $params);
 

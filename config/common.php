@@ -2,6 +2,7 @@
 
 return [
     'status_default' => -1,
+    'wechat_title' => '随缘的图书小店',
     'status_mapping' => [
         1 => '正常',
         0 => '已删除'

@@ -72,8 +72,12 @@ class UserController extends BaseController
                 if ($pay_order->status = -8) {
                     PayOrderService::closeOrder($pay_order->id);
                 }
+                $act = '取消成功～～～';
                 break;
             case 'confirm_express':
+                $pay_order->express_status = 1;
+                $pay_order->save();
+                $act = '收货成功～～～';
                 break;
         }
 
@@ -81,7 +85,7 @@ class UserController extends BaseController
             return ajaxReturn($err_msg, -1);
         }
 
-        return ajaxReturn('操作成功~~~');
+        return ajaxReturn($act);
     }
 
     public function fav()

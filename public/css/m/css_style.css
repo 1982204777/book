@@ -273,7 +273,7 @@ input[type='checkbox']:checked + label:after, input[type='checkbox']:checked + l
 .shelves_box span a:hover{background:#f20c11; color:#fff;border:1px solid #f20c11;}
 
 /****/
-.footer_fixed{background:#fff;width:100%; border-top:1px solid #e6e6e6;position:fixed; left:0; bottom:0; z-index:99; height:70px; overflow:hidden;}
+.footer_fixed{background:#fff;width:100%; border-top:1px solid #e6e6e6;position:fixed; left:0; bottom:0; z-index:10000; height:70px; overflow:hidden;}
 .footer_fixed span{width:33%; float:left;text-align:center;display:block;}
 
 .footer_fixed a{display:block;text-align:center;padding-bottom:0.5rem; position:relative; padding-top:4rem; width:100%;}
@@ -435,9 +435,9 @@ input[type='checkbox']:checked + label:after, input[type='checkbox']:checked + l
 .fav_list li .pic{display:block;width:120px;height:120px; position:absolute; left:0; top:1rem;}
 .fav_list li .pic img{display:block;width:100%;}
 .fav_list li h2{margin:0; padding:0;padding-top:5px; font-weight:normal;color:#454545; font-size:1.6rem; line-height:22px;}
-.fav_list li b{color:#f20c11; position:absolute; left:130px; bottom:1rem;}
+.fav_list li b{color:#f20c11; position:absolute; left:130px; bottom:2.5rem;}
 .fav_list li:last-child{border-bottom:0;}
-.fav_list li .del_fav{display:inline-block; padding:1rem 0.5rem 0.5rem 1rem;position:absolute;right:-0.5rem; bottom:1rem; z-index:3; background:#fff;text-align:right;}
+.fav_list li .del_fav{display:inline-block; padding:1rem 0.5rem 0.5rem 1rem;position:absolute;right:-0.5rem; bottom:2rem; z-index:3; background:#fff;text-align:right;}
 .del_fav_icon{display:block;width:2.4rem; height:2.4rem; background:url(../../images/m/quxiaoshoucang@3x.png) no-repeat left top; background-size:contain; }
 
 
@@ -617,7 +617,7 @@ input[type='checkbox']:checked + label:after, input[type='checkbox']:checked + l
 .pro_warp img{max-width:100%;}
 
 
-.pro_fixed{background:#fff;width:100%; left:0; bottom:0; position:fixed; z-index:100; border-top:1px solid #e6e6e6;}
+.pro_fixed{background:#fff;width:100%; left:0; bottom:0; position:fixed; z-index:10001; border-top:1px solid #e6e6e6;}
 .pro_fixed a{display:block;float:left;width:15%;text-align:center;padding:3.5rem  0 0.5rem  0; position:relative;}
 .pro_fixed a span{display:block; text-align:center;font-size:1.4rem;}
 .pro_fixed a i{display:block; position:absolute; left:50%;top:1rem;}

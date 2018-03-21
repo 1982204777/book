@@ -33,7 +33,7 @@
                 <a href="/admin/qrcode"><i class="fa fa-share-alt fa-lg"></i> <span class="nav-label">营销渠道</span></a>
             </li>
             <li class="stat {{substr(request()->getPathInfo(), 0, 11) == '/admin/stat' ? 'active' : ''}}">
-                <a href="/admin/statistics"><i class="fa fa-bar-chart fa-lg"></i> <span class="nav-label">统计管理</span></a>
+                <a href="/admin/stat"><i class="fa fa-bar-chart fa-lg"></i> <span class="nav-label">统计管理</span></a>
             </li>
         </ul>
 

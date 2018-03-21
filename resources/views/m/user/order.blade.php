@@ -27,28 +27,28 @@
 				<i class="pic">
                     <img src="{{makeImgUrl($item['book']['main_img'])}}"  style="width: 100px;height: 100px;"/>
                 </i>
-				<h2>{{$item['book']['name']}} </h2>
-				<h3>{!! $item['book']['summary'] !!}</h3>
-				<h4>&nbsp;</h4>
-				<b>¥ {{$item['book']['price']}}</b>
+				<h2 style="margin-top:10px;">{{$item['book']['name']}} </h2>
+				<span>x{{$item['quantity']}}</span>
+				<div style="margin-top: 20px; overflow: hidden;"></div>
+				<span class="left">¥ {{$item['book']['price']}}</span><span style="float: right;">x{{$item['quantity']}}</span>
 			</a>
 			@if($order['status'] == 1 && $order['express_status'] == 1 && !$item['comment_status'])
 				<a style="display: block;position: absolute;bottom: 1rem;right: 1rem;" class="button" href="/m/product/order/comment/create?pay_order_id={{$order['id']	}}&book_id={{$item['book']['id']}}">我要评论</a>
+			@endif
+			@if($order['status'] == 1 && $order['express_status'] == -6)
+					<a style="display: block;position: absolute;bottom: 1rem;right: 1rem;" class="button confirm-express" data="{{$order['id']}}"  href="#"  class="button confirm_express">确认收货</a>
 			@endif
 		</li>
 			@endforeach
 	</ul>
 		@if($order['status'] == -8)
 		<div class="op_box border-top">
+			<span style="margin-right: 20px;">总计：{{$order['pay_price']}}</span>
             <a style="display: inline-block;" class="button close" data="{{$order['id']}}" href="javascript:void(0);">取消订单</a>
             <a style="display: inline-block;" class="button"  href="/m/product/order/pay?pay_order_id={{$order['id']}}">微信支付</a>
         </div>
 		@endif
-		@if($order['status'] == 1 && $order['express_status'] == -6)
-			<div class="op_box border-top">
-				<a style="display: inline-block;" data="{{$order['id']}}"  href="#"  class="button confirm_express">确认收货</a>
-			</div>
-			@endif
+
 	</div>
 		@endforeach
 </div>

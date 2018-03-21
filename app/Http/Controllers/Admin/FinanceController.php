@@ -140,10 +140,13 @@ class FinanceController extends BaseController
         $pay_order->express_status = -6;
 
         if ($pay_order->save()) {
-            QueueListService::addQueue('express', [
-                'member_id' => $pay_order->member_id,
-                'pay_order_id' => $pay_order->id
+            //发货之后要发通知
+            QueueListService::addQueue( "express",[
+                'member_id' => $pay_order['member_id'],
+                'pay_order_id' => $pay_order_id
             ]);
+            //队列发送模板消息
+            $this->dispatch(new \App\Jobs\SendMessage());
         }
 
         return ajaxReturn('发货成功～～～');
