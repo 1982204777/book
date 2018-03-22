@@ -15,12 +15,12 @@ class MenuController extends Controller
                 [
                     'name' => '商城',
                     'type' => 'view',
-                    'url' => 'http://book_test_22.tunnel.echomod.cn/m/home'
+                    'url' => 'http://www.wangyouquan.cc/m/home'
                 ],
                 [
                     'name' => '我',
                     'type' => 'view',
-                    'url' => 'http://book_test_22.tunnel.echomod.cn/m/user'
+                    'url' => 'http://www.wangyouquan.cc/m/user'
                 ]
             ]
         ];

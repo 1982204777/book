@@ -59,9 +59,6 @@ class MsgController
             default:
                 return $this->textTpl($from_username, $to_username, $res['data']);
         }
-
-
-        return 'hello world';
     }
 
 

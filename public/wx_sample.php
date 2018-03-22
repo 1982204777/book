@@ -9,8 +9,8 @@ require './Medoo.php';
 define("TOKEN", "wangyouquan");
 
 $wechatObj = new wechatCallbackapiTest();
-$wechatObj->valid();
-//$wechatObj->responseMsg();
+//$wechatObj->valid();
+$wechatObj->responseMsg();
 
 class wechatCallbackapiTest
 {
