@@ -636,7 +636,7 @@ class ProductController extends BaseController
             microtime(true)
         ];
         $log_obj = new Logger('wechat-pay');
-        $log_obj->pushHandler(new StreamHandler(storage_path('logs/online_pay_'. date('Y-m-d') . '.log')), Logger::INFO);
+        $log_obj->pushHandler(new StreamHandler(storage_path('logs/pay/online_pay_'. date('Y-m-d') . '.log')), Logger::INFO);
         $log_obj->info('wechat-pay', $log);
     }
 }

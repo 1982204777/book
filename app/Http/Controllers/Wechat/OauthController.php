@@ -33,7 +33,6 @@ class OauthController extends BaseController
         $res = json_decode($res, true);
 
         $access_token = isset($res['access_token']) ? $res['access_token'] : '';
-        dd($res);
         if (!$access_token) {
             return $this->goHome();
         }
@@ -51,7 +50,6 @@ class OauthController extends BaseController
             $member_info = Member::where('id', $reg_bind->member_id)
                     ->where('status', 1)
                     ->first();
-            dd($member_info);
             if (!$member_info) {
                 $reg_bind->delete();
                 return $this->goHome();
@@ -60,7 +58,6 @@ class OauthController extends BaseController
                 $url = "https://api.weixin.qq.com/sns/userinfo?access_token={$access_token}&openid={$openid}&lang=zh_CN";
                 $wechat_user_info = HttpClient::get($url);
                 $wechat_user_info = json_decode($wechat_user_info, true);
-                dd($wechat_user_info);
 
                 //这个时候做登录特殊处理，例如更新用户名和头像等等新
             if ($member_info->avatar == ConstantMapService::$default_avatar){

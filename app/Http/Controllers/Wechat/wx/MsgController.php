@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Wechat\wx;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Book;
+use App\Http\Models\MarketQrCode;
+use App\Http\Models\QrCodeScanHistory;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -27,6 +29,7 @@ class MsgController
         if (!$xml_data) {
             return 'error xml~~~';
         }
+        $this->record_log($xml_data);
         $xml_obj = simplexml_load_string($xml_data, 'SimpleXMLElement', LIBXML_NOCDATA);
         $from_username = $xml_obj->FromUserName;
         $to_username = $xml_obj->ToUserName;
@@ -51,6 +54,7 @@ class MsgController
             default:
                 break;
         }
+
 
         switch($res['type']) {
             case "rich":
@@ -88,13 +92,36 @@ EOT;
         return $data;
     }
 
+    /**
+     * 关注默认提示
+     */
+    private function subscribeTips(){
+        $resData = <<<EOT
+感谢您关注随缘的公众号
+输入关键字,可以搜索商品哦,
+[商城账号]获取商城账号
+EOT;
+
+        return $resData;
+    }
+
+    private function returnTips(){
+        $resData = <<<EOT
+HI,好久不见
+输入关键字,可以搜索商品哦,
+[商城账号]获取商城账号
+EOT;
+
+        return $resData;
+    }
+
     private function search($kw)
     {
         $query = Book::query();
         $res = $query->where('name', 'like', '%' . $kw . '%')
             ->orWhere('tags', 'like', '%' . $kw . '%')
             ->orderBy('id', 'desc')
-            ->limit(3)
+            ->take(3)
             ->get();
         if ($res->isNotEmpty()) {
             $data = $this->getRichXml($res);
@@ -105,6 +132,44 @@ EOT;
         }
 
         return ['type' => $type, "data" => $data];
+    }
+
+    public function parseEvent($dataObj)
+    {
+        $resType = "text";
+        $resData = $this->defaultTip();
+        $event = $dataObj->Event;
+        $event_key = $dataObj->EventKey;
+        switch($event){
+            case "subscribe":
+                $resData = $this->subscribeTips();
+
+                if ($event_key) {
+                    $qrcode_key = str_replace('qrscene_', '', $event_key);
+                    $qrcode = MarketQrCode::find($qrcode_key);
+                    $qrcode->total_scan_count += 1;
+                    $qrcode->save();
+
+                    $qrcode_scan_histoty = new QrCodeScanHistory();
+                    $qrcode_scan_histoty->openid = strval($dataObj->FromUserName);
+                    $qrcode_scan_histoty->qrcode_id = $qrcode_key;
+                    $qrcode_scan_histoty->created_at = date('Y-m-d H:i:s');
+                    $qrcode_scan_histoty->save();
+                }
+                break;
+            case "CLICK"://自定义菜单点击类型是CLICK的，可以回复指定内容
+                $eventKey = trim($dataObj->EventKey);
+                switch($eventKey){
+                }
+                break;
+            default:
+                $qrcode_key = str_replace('qrscene_', '', $event_key);
+                $qrcode = MarketQrCode::find($qrcode_key);
+                $qrcode->total_scan_count += 1;
+                $qrcode->save();
+                $resData = $this->returnTips();;
+        }
+        return [ 'type'=>$resType,'data'=>$resData ];
     }
 
     private function textTpl($from_username, $to_username, $content)
@@ -123,9 +188,8 @@ EOT;
     /*
      *富文本
      */
-    private function richTpl($from_username, $to_username, $content)
-    {
-        $rich_tpl = <<<EOT
+    private function richTpl( $from_username ,$to_username,$data){
+        $tpl = <<<EOT
 <xml>
 <ToUserName><![CDATA[%s]]></ToUserName>
 <FromUserName><![CDATA[%s]]></FromUserName>
@@ -134,8 +198,7 @@ EOT;
 %s
 </xml>
 EOT;
-        return sprintf($rich_tpl, $to_username, $from_username, time(), $content);
-
+        return sprintf($tpl, $from_username, $to_username, time(), $data);
     }
 
     private function getRichXml($list)
@@ -145,7 +208,7 @@ EOT;
         foreach ($list as $item) {
             $tmp_description = mb_substr(strip_tags($item->summary), 0, 20, 'utf-8');
             $tmp_pic_url = request()->getHttpHost() . '/storage/' . $item->main_img;
-            $tmp_url = request()->getHttpHost() . '/admin/book/' . $item->id;
+            $tmp_url = request()->getHttpHost() . '/m/product/info?id=' . $item->id;
             $article_content .= "
             <item>
 <Title><![CDATA[{$item->name}]]></Title>
@@ -175,7 +238,7 @@ EOT;
             microtime(true)
         ];
         $log_obj = new Logger('wechat-msg');
-        $log_obj->pushHandler(new StreamHandler(storage_path('logs/wechat_msg_' . date('Y-m-d') . '.log')), Logger::INFO);
+        $log_obj->pushHandler(new StreamHandler(storage_path('logs/wechat/wechat_msg_' . date('Y-m-d') . '.log')), Logger::INFO);
         $log_obj->info('wechat-msg', $log);
     }
 

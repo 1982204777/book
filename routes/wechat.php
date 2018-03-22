@@ -15,7 +15,7 @@ Route::get('/menu/set', '\App\Http\Controllers\Wechat\wx\MenuController@setMenu'
 Route::get('/oauth/login', 'OauthController@login');
 Route::get('/oauth/callback', 'OauthController@callback');
 Route::get('/oauth/logout', 'OauthController@logout');
-Route::get('/sample', '\App\Http\Controllers\Wechat\wx\MsgController@index');
+Route::match(['get', 'post'], '/sample', '\App\Http\Controllers\Wechat\wx\MsgController@index');
 
 Route::get('/jssdk/sign', '\App\Http\Controllers\Wechat\wx\JssdkController@index');
 
