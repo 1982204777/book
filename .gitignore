@@ -1,5 +1,6 @@
 /node_modules
-/public
+/public/storage
+/public/images/qrcodes
 /storage/*.key
 /.idea
 /.vagrant
