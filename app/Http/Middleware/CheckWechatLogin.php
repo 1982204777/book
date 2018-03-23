@@ -18,7 +18,8 @@ class CheckWechatLogin
         '/m/product',
         '/m/product/search',
         '/m/product/info',
-        '/m/product/share'
+        '/m/product/share',
+	'/m/oauth/login'
     ];
 
     public function handle(Request $request,\Closure $next)

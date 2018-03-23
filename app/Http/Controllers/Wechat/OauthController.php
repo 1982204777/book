@@ -36,7 +36,7 @@ class OauthController extends BaseController
         if (!$access_token) {
             return $this->goHome();
         }
-
+	
         $scope = isset($res['scope']) ? $res['scope'] : '';
         $openid = isset($res['openid']) ? $res['openid'] : '';
 
@@ -58,7 +58,6 @@ class OauthController extends BaseController
                 $url = "https://api.weixin.qq.com/sns/userinfo?access_token={$access_token}&openid={$openid}&lang=zh_CN";
                 $wechat_user_info = HttpClient::get($url);
                 $wechat_user_info = json_decode($wechat_user_info, true);
-
                 //这个时候做登录特殊处理，例如更新用户名和头像等等新
             if ($member_info->avatar == ConstantMapService::$default_avatar){
 //                需要做一个队列数据库了

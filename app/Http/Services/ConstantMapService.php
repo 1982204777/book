@@ -7,7 +7,7 @@ class ConstantMapService {
 
     public static $client_type_wechat = 1;
 
-    public static $default_avatar = 'default_avatar';
+    public static $default_avatar = '/images/common/default_avatar.png';
 
     public static $default_status = -1;
 

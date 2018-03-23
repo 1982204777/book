@@ -83,6 +83,7 @@ var wechat_bind_ops = {
                 return false;
             }
             btn_target.addClass('disabled');
+
             $.ajax({
                 url:'bind',
                 type:'POST',
@@ -105,6 +106,7 @@ var wechat_bind_ops = {
                             window.location.href = '/m/home';
                         }
                     }
+
                     common_ops.alert(res.msg, callback);
                 },
                 error:function() {
