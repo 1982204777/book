@@ -112,7 +112,7 @@ class SendMessage implements ShouldQueue
     {
         $data = json_decode($item, true);
 
-        if (!isset($data['member_id']) || !isset($data['avatar_url'])) {
+        if (!isset($data['member_id']) || !isset($data['avatar_url']) || !isset($data['sex'])) {
             return false;
         }
         if (!$data['member_id'] || !$data['avatar_url']) {
@@ -121,6 +121,7 @@ class SendMessage implements ShouldQueue
 
         $member = Member::find($data['member_id']);
         $member->avatar = $data['avatar_url'];
+        $member->sex = $data['sex'];
         if ($member->save()) {
             return true;
         }

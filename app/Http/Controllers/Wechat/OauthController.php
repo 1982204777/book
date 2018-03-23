@@ -66,6 +66,7 @@ class OauthController extends BaseController
                 QueueListService::addQueue( "member_avatar",[
                     'member_id' => $member_info['id'],
                     'avatar_url' => $wechat_user_info['headimgurl'],
+                    'sex' => $wechat_user_info['sex']
                 ]);
                 //队列修改头像
                 $this->dispatch(new \App\Jobs\SendMessage());

@@ -38,7 +38,7 @@ class DailySiteCount extends Command
      */
     public function handle()
     {
-//        DailyService::siteCount();
+        DailyService::siteCount();
         DailyService::bookCount();
         DailyService::memberCount();
     }

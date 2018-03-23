@@ -53,7 +53,5 @@ class OrderClose extends Command
         foreach ($order_thirty_minutes_before as $item) {
             PayOrderService::closeOrder($item['id']);
         }
-
-        logger('it is over~~~');
     }
 }

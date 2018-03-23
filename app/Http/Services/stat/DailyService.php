@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\stat;
 
+use App\Http\Models\BookSaleChangeLog;
 use App\Http\Models\Member;
 use App\Http\Models\order\PayOrder;
 use App\Http\Models\stat\StatDailyBook;
@@ -62,6 +63,16 @@ class DailyService
         $date = date('Y-m-d', strtotime($date));
         $time_start = $date . ' 00:00:00';
         $time_end = $date . ' 23:59:59';
+
+//        伪造数据
+        $book_sale_change_log = new BookSaleChangeLog();
+        $book_sale_change_log->book_id = 1;
+        $book_sale_change_log->quantity = 1;
+        $book_sale_change_log->price = sprintf('%.2f', 100);
+        $book_sale_change_log->member_id = 15;
+        $book_sale_change_log->created_at = date('Y-m-d H:i:s');
+        $book_sale_change_log->save();
+//        伪造数据end
 
         $stat_book_list = DB::table('book_sale_change_log')
                 ->select(DB::raw('book_id, SUM(quantity) AS total_count, SUM(price) AS total_pay_money'))

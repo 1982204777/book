@@ -25,8 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//         $schedule->command('command:orderClose')->everyThirtyMinutes();
-         $schedule->command('command:DailySiteCount');
+         $schedule->command('command:orderClose')->everyThirtyMinutes();
+         $schedule->command('command:DailySiteCount')->dailyAt('20:42');
     }
 
     /**
