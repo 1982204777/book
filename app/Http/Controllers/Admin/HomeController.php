@@ -10,29 +10,29 @@ class HomeController extends BaseController
     {
         $data = [
             'finance' => [
-                'today' => '',
-                'month' => ''
+                'today' => 0,
+                'month' => 0
             ],
             'order' => [
-                'today' => '',
-                'month' => ''
+                'today' => 0,
+                'month' => 0
             ],
             'member' => [
-                'today' => '',
-                'month' => '',
-                'total' => ''
+                'today' => 0,
+                'month' => 0,
+                'total' => 0
             ],
             'shared' => [
-                'today' => '',
-                'month' => ''
+                'today' => 0,
+                'month' => 0
             ]
         ];
 
         $date_from = date('Y-m-d', strtotime('-30 days'));
         $date_now = date('Y-m-d');
-        $stat_daily_site_info = StatDailySite::whereBetween('date', [$date_from, $date_now])->orderBy('id', 'desc')->get();
+        $stat_daily_site_info = StatDailySite::whereBetween('date', [$date_from, $date_now])->orderBy('id', 'desc')->get()->toArray();
         foreach ($stat_daily_site_info as $item) {
-            $data['finance']['month'] += $item['total_pay_money'];
+            $data['finance']['month'] += intval($item['total_pay_money']);
             $data['order']['month'] += $item['total_order_count'];
             $data['member']['month'] += $item['total_new_member_count'];
             $data['shared']['month'] += $item['total_shared_count'];
