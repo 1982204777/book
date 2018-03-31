@@ -127,11 +127,12 @@ class BookController extends BaseController
             ->with('category')
             ->with('stock_change_logs')
             ->with(['payOrderItems' => function ($q) {
-                return $q->with('member');
+                return $q->with('member')->with('order');
             }])
             ->first();
+        $pay_status_mapping = ConstantMapService::$pay_status_mapping;
 
-        return view('admin/book/info', compact('book'));
+        return view('admin/book/info', compact('book', 'pay_status_mapping'));
     }
 
     public function edit($id)

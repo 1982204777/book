@@ -83,7 +83,7 @@
                                         </td>
                                         <td>{{$item->quantity}}</td>
                                         <td>{{$book->price}}</td>
-                                        <td>2017-02-21 15:56:34</td>
+                                        <td>{{$pay_status_mapping[$item->order->status]}}</td>
                                     </tr>
                                         @endforeach
                                     </tbody>

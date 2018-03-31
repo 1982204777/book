@@ -19,4 +19,9 @@ class PayOrderItem extends BaseModel
     {
         return $this->belongsTo(Member::class, 'member_id', 'id');
     }
+
+    public function order()
+    {
+        return $this->hasOne(PayOrder::class, 'id', 'pay_order_id');
+    }
 }
