@@ -3,11 +3,11 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="profile-element text-center">
-                    <img alt="image" class="img-circle" src="/images/web/logo.png" />
-                    <p class="text-muted">编程浪子</p>
+                    <img alt="image" class="img-circle" src="/images/web/logo.jpg" width="80"/>
+                    <p class="text-muted">随缘</p>
                 </div>
                 <div class="logo-element">
-                    <img alt="image" class="img-circle" src="/images/web/logo.png" />
+                    <img alt="image" class="img-circle" src="/images/web/logo.jpg" />
                 </div>
             </li>
             <li class="dashboard {{substr(request()->getPathInfo(), 0, 14) == '/admin/home' ? 'active' : ''}}">

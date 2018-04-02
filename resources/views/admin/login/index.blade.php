@@ -17,7 +17,7 @@
         <div class="col-md-6 text-center">
             <h2 class="font-bold">图书商城管理后台</h2>
             <p>
-                <img src="/images/common/qrcode.jpg" width="300px"/>
+                <img src="/images/common/qrcode.png" width="300px"/>
             </p>
             <p class="text-danger">
                 扫描关注查看Demo
