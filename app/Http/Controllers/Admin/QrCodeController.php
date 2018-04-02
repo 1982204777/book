@@ -141,6 +141,7 @@ class QrCodeController extends BaseController
         if (!$model_qrcode::checkUnique($name, 'name', $model_qrcode->name)) {
             return ajaxReturn('渠道名称已存在~~~', -1);
         }
+        $model_qrcode->name = $name;
         $model_qrcode->save();
 
         return ajaxReturn('编辑成功~~~');

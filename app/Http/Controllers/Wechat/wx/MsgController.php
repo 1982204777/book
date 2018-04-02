@@ -207,7 +207,8 @@ EOT;
         $article_content = '';
         foreach ($list as $item) {
             $tmp_description = mb_substr(strip_tags($item->summary), 0, 20, 'utf-8');
-            $tmp_pic_url = request()->getHttpHost() . '/storage/' . $item->main_img;
+//            $tmp_pic_url = request()->getHttpHost() . '/storage/' . $item->main_img;
+            $tmp_pic_url = 'http://www.wangyouquan.cc/storage/book/20180324/IXohkFVjMVP4Yy8Kf1CkfgGnAhS0ULJWiy2O02uv.jpeg';
             $tmp_url = request()->getHttpHost() . '/m/product/info?id=' . $item->id;
             $article_content .= "
             <item>
